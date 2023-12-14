@@ -10,13 +10,32 @@ IConfigurationRoot? _configuration = new ConfigurationBuilder()
 
 ForegroundColor = ConsoleColor.DarkCyan;
 
+# region Output Data
 // NOTE: Uncomment only to verify the values. ***** (Warning)
 //WriteLine(_configuration["AIServicesEndpoint"]);
 //WriteLine(_configuration["AIServicesKey"]);
+#endregion
+
+string AISvcEndpoint = _configuration["AIServicesEndpoint"]!;
+string AISvcKey = _configuration["AIServicesKey"]!;
 
 try
 {
+    // Get user input (until they enter "quit")
+    string userText = "";
 
+    while (userText?.ToLower() != "quit")
+    {
+        Console.WriteLine("\nEnter some text ('quit' to stop)");
+        userText = Console.ReadLine()!;
+
+        if (userText?.ToLower() != "quit")
+        {
+            // Call function to detect language
+            string language = GetLanguage(userText!);
+            Console.WriteLine("Language: " + language);
+        }
+    }
 }
 catch (Exception exception)
 {
@@ -30,16 +49,14 @@ ResetColor();
 WriteLine("\n\nPress any key ...");
 ReadKey();
 
-static string GetLanguage(string text, string AISvcEndpoint, string AISvcKey)
+string GetLanguage(string text)
 {
 
-    // Create client using endpoint and key
     AzureKeyCredential credentials = new(AISvcKey);
     Uri endpoint = new(AISvcEndpoint);
 
     TextAnalyticsClient? client = new(endpoint, credentials);
 
-    // Call the service to get the detected language
     DetectedLanguage detectedLanguage = client.DetectLanguage(text);
 
     return (detectedLanguage.Name);
