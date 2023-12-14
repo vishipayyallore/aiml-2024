@@ -1,15 +1,26 @@
-﻿using AAI.TextAnalyticsApp.Services;
+﻿using AAI.TextAnalyticsApp.Extensions;
+using AAI.TextAnalyticsApp.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-IConfigurationRoot? _configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .AddUserSecrets("fb603ff5-AzAIServices")
-    .Build();
+using IHost host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((_, services) =>
+            {
+                IConfiguration configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddUserSecrets("fb603ff5-AzAIServices")
+                    .Build();
+
+                services.ConfigureServices(configuration);
+            })
+            .Build();
 
 ForegroundColor = ConsoleColor.DarkCyan;
 
-TextAnalyticsService textAnalyticsService = new(_configuration);
+// Now you can use the services provided by the host, including the configured IConfiguration
+ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredService<ITextAnalyticsService>();
 
 try
 {
@@ -36,8 +47,9 @@ catch (Exception exception)
 
     WriteLine(exception.Message);
 }
-
-ResetColor();
-
-WriteLine("\n\nPress any key ...");
-ReadKey();
+finally
+{
+    Console.ResetColor();
+    Console.WriteLine("\n\nPress any key ...");
+    Console.ReadKey();
+}
