@@ -5,31 +5,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-public class TextAnalyticsService : ITextAnalyticsService
+public class TextAnalyticsService(IConfiguration configuration) : ITextAnalyticsService
 {
-    //private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
-    //private readonly string _key = configuration["AIServicesKey"]!;
-
-    private readonly string _endpoint;
-    private readonly string _key;
-
-    public TextAnalyticsService(IConfiguration configuration)
-    {
-        Console.WriteLine("Initializing TextAnalyticsService...");
-
-        _endpoint = configuration["AIServicesEndpoint"]!;
-        _key = configuration["AIServicesKey"]!;
-
-        Console.WriteLine($"Endpoint: {_endpoint}");
-        Console.WriteLine($"Key: {_key}");
-    }
+    private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
+    private readonly string _key = configuration["AIServicesKey"]!;
 
     public string GetLanguage(string text)
     {
-        AzureKeyCredential credentials = new(_key);
-        Uri endpoint = new(_endpoint);
-
-        TextAnalyticsClient? client = new(endpoint, credentials);
+        TextAnalyticsClient? client = new(new Uri(_endpoint), new AzureKeyCredential(_key));
 
         DetectedLanguage detectedLanguage = client.DetectLanguage(text);
 
