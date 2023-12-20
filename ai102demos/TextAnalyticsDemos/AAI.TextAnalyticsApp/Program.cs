@@ -18,8 +18,6 @@ using IHost host = Host.CreateDefaultBuilder(args)
             })
             .Build();
 
-ForegroundColor = ConsoleColor.DarkCyan;
-
 // Now you can use the services provided by the host, including the configured IConfiguration
 ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsService));
 ITextAnalyticsService textAnalyticsServiceRest = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsServiceRest));
@@ -31,6 +29,8 @@ try
 
     while (userText?.ToLower() != "quit")
     {
+        ForegroundColor = ConsoleColor.DarkCyan;
+
         WriteLine("\nEnter some text ('quit' to stop)");
         userText = Console.ReadLine()!;
 
@@ -42,6 +42,7 @@ try
 
             WriteLine("Language Detected using SDK: " + language);
 
+            ForegroundColor = ConsoleColor.Yellow;
             WriteLine($"Calling Azure Cognitive Services with REST API ... with given {userText}");
 
             language = await textAnalyticsServiceRest.GetLanguage(userText!);

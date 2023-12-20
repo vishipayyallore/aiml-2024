@@ -17,7 +17,6 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
 
     public async Task<string> GetLanguage(string text)
     {
-
         try
         {
             JsonArray documentsArray =
