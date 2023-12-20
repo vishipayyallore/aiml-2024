@@ -36,10 +36,17 @@ try
 
         if (userText?.ToLower() != "quit")
         {
-            // Call function to detect language
+            WriteLine($"Calling Azure Cognitive Services with SDK ... with given {userText}");
+
             string language = await textAnalyticsService.GetLanguage(userText!);
 
-            WriteLine("Language: " + language);
+            WriteLine("Language Detected using SDK: " + language);
+
+            WriteLine($"Calling Azure Cognitive Services with REST API ... with given {userText}");
+
+            language = await textAnalyticsServiceRest.GetLanguage(userText!);
+
+            WriteLine("Language Detected using REST API: " + language);
         }
     }
 }
