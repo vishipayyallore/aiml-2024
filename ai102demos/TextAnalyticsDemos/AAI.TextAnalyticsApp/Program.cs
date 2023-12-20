@@ -1,4 +1,5 @@
 ﻿using AAI.TextAnalyticsApp.Common;
+using AAI.TextAnalyticsApp.Configuration;
 using AAI.TextAnalyticsApp.Extensions;
 using AAI.TextAnalyticsApp.Interfaces;
 using AAI.TextAnalyticsApp.Services;
@@ -15,7 +16,12 @@ using IHost host = Host.CreateDefaultBuilder(args)
                     .AddUserSecrets("fb603ff5-AzAIServices")
                     .Build();
 
-                services.ConfigureServices(configuration);
+                TextAnalyticsAppConfiguration appConfig = new();
+                configuration.GetSection("TextAnalyticsApp").Bind(appConfig);
+
+                services.AddSingleton(appConfig);
+
+                services.ConfigureServices();
             })
             .Build();
 

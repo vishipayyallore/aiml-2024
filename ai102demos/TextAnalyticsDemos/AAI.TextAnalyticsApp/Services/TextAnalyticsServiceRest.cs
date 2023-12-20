@@ -1,5 +1,5 @@
-﻿using AAI.TextAnalyticsApp.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using AAI.TextAnalyticsApp.Configuration;
+using AAI.TextAnalyticsApp.Interfaces;
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Http.Headers;
@@ -9,10 +9,10 @@ using System.Web;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-public class TextAnalyticsServiceRest(IConfiguration configuration, IHttpClientFactory httpClientFactory) : ITextAnalyticsService
+public class TextAnalyticsServiceRest(TextAnalyticsAppConfiguration appConfig, IHttpClientFactory httpClientFactory) : ITextAnalyticsService
 {
-    private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
-    private readonly string _key = configuration["AIServicesKey"]!;
+    private readonly string _endpoint = appConfig?.AIServicesEndpoint!;
+    private readonly string _key = appConfig?.AIServicesKey!;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private string _language = "";
 

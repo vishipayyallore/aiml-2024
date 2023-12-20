@@ -1,14 +1,14 @@
-﻿using AAI.TextAnalyticsApp.Interfaces;
+﻿using AAI.TextAnalyticsApp.Configuration;
+using AAI.TextAnalyticsApp.Interfaces;
 using Azure;
 using Azure.AI.TextAnalytics;
-using Microsoft.Extensions.Configuration;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-public class TextAnalyticsService(IConfiguration configuration) : ITextAnalyticsService
+public class TextAnalyticsService(TextAnalyticsAppConfiguration appConfig) : ITextAnalyticsService
 {
-    private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
-    private readonly string _key = configuration["AIServicesKey"]!;
+    private readonly string _endpoint = appConfig?.AIServicesEndpoint!;
+    private readonly string _key = appConfig?.AIServicesKey!;
 
     public async Task<string> GetLanguage(string text)
     {
