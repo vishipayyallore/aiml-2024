@@ -9,10 +9,11 @@ using System.Web;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnalyticsService
+public class TextAnalyticsServiceRest(IConfiguration configuration, IHttpClientFactory httpClientFactory) : ITextAnalyticsService
 {
     private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
     private readonly string _key = configuration["AIServicesKey"]!;
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private string _language = "";
 
     public async Task<string> GetLanguage(string text)
@@ -38,38 +39,39 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
 
             //WriteLine(utf8.GetString(encodedBytes, 0, encodedBytes.Length));
 
-            HttpClient client = new();
-            NameValueCollection? queryString = HttpUtility.ParseQueryString(string.Empty);
-
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _key);
-
-            string? uri = $"{_endpoint}text/analytics/v3.1/languages?{queryString}";
-
-            HttpResponseMessage response;
-            using (ByteArrayContent? content = new(encodedBytes))
+            using (var client = _httpClientFactory.CreateClient())
             {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _key);
 
-                response = await client.PostAsync(uri, content);
-            }
+                NameValueCollection? queryString = HttpUtility.ParseQueryString(string.Empty);
+                string? uri = $"{_endpoint}text/analytics/v3.1/languages?{queryString}";
 
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var results = JsonObject.Parse(responseContent);
-                //WriteLine(results?.ToString());
-
-                // Extract the detected language name for each document
-                foreach (JsonNode? document in results["documents"] as JsonArray)
+                HttpResponseMessage response;
+                using (ByteArrayContent? content = new(encodedBytes))
                 {
-                    _language = document["detectedLanguage"]["name"]?.ToString() ?? "";
-                    //WriteLine($"\nLanguage: {_language}");
+                    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                    response = await client.PostAsync(uri, content);
                 }
-            }
-            else
-            {
-                // Something went wrong, write the whole response
-                WriteLine(response.ToString());
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var results = JsonObject.Parse(responseContent);
+                    //WriteLine(results?.ToString());
+
+                    // Extract the detected language name for each document
+                    foreach (JsonNode? document in results["documents"] as JsonArray)
+                    {
+                        _language = document["detectedLanguage"]["name"]?.ToString() ?? "";
+                        //WriteLine($"\nLanguage: {_language}");
+                    }
+                }
+                else
+                {
+                    // Something went wrong, write the whole response
+                    WriteLine(response.ToString());
+                }
             }
         }
         catch (Exception ex)

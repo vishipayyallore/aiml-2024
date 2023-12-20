@@ -12,6 +12,8 @@ public static class AAITextAnalyticsAppExtensions
     {
         services.AddSingleton(configuration);
 
+        services.AddHttpClient();
+
         services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsService>(nameof(TextAnalyticsService));
 
         services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsServiceRest>(nameof(TextAnalyticsServiceRest));
