@@ -9,8 +9,6 @@ public static class AAITextAnalyticsAppExtensions
 
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
-        //services.AddSingleton(configuration);
-
         services.AddHttpClient();
 
         services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsService>(nameof(TextAnalyticsService));
