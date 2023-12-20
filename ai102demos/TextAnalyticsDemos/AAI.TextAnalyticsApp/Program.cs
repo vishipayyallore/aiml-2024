@@ -1,4 +1,5 @@
-﻿using AAI.TextAnalyticsApp.Extensions;
+﻿using AAI.TextAnalyticsApp.Common;
+using AAI.TextAnalyticsApp.Extensions;
 using AAI.TextAnalyticsApp.Interfaces;
 using AAI.TextAnalyticsApp.Services;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,7 @@ try
         WriteLine("\nEnter some text ('quit' to stop)");
         userText = Console.ReadLine()!;
 
-        if (userText?.ToLower() != "quit")
+        if (userText?.ToLower() != Constants.QuitCommand)
         {
             WriteLine($"Calling Azure Cognitive Services with SDK ... with given {userText}");
 
