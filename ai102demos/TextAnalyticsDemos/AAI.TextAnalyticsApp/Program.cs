@@ -1,5 +1,6 @@
 ﻿using AAI.TextAnalyticsApp.Extensions;
 using AAI.TextAnalyticsApp.Interfaces;
+using AAI.TextAnalyticsApp.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +21,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
 ForegroundColor = ConsoleColor.DarkCyan;
 
 // Now you can use the services provided by the host, including the configured IConfiguration
-ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredService<ITextAnalyticsService>();
+ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsService));
 
 try
 {

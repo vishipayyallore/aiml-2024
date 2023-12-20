@@ -12,7 +12,7 @@ public static class AAITextAnalyticsAppExtensions
     {
         services.AddSingleton(configuration);
 
-        services.AddSingleton<ITextAnalyticsService, TextAnalyticsService>();
+        services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsService>(nameof(TextAnalyticsService));
 
         return services;
     }
