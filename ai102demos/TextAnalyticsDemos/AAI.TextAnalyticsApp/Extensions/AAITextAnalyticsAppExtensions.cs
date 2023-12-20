@@ -14,6 +14,8 @@ public static class AAITextAnalyticsAppExtensions
 
         services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsService>(nameof(TextAnalyticsService));
 
+        services.AddKeyedScoped<ITextAnalyticsService, TextAnalyticsServiceRest>(nameof(TextAnalyticsServiceRest));
+
         return services;
     }
 

@@ -9,7 +9,7 @@ using System.Web;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-internal class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnalyticsService
+public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnalyticsService
 {
     private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
     private readonly string _key = configuration["AIServicesKey"]!;

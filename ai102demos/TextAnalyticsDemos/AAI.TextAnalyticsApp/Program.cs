@@ -22,6 +22,7 @@ ForegroundColor = ConsoleColor.DarkCyan;
 
 // Now you can use the services provided by the host, including the configured IConfiguration
 ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsService));
+ITextAnalyticsService textAnalyticsServiceRest = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsServiceRest));
 
 try
 {
