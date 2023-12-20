@@ -1,20 +1,20 @@
-﻿using AAI.TextAnalyticsApp.Interfaces;
+﻿using AAI.TextAnalyticsApp.Configuration;
+using AAI.TextAnalyticsApp.Interfaces;
 using Azure;
 using Azure.AI.TextAnalytics;
-using Microsoft.Extensions.Configuration;
 
 namespace AAI.TextAnalyticsApp.Services;
 
-public class TextAnalyticsService(IConfiguration configuration) : ITextAnalyticsService
+public class TextAnalyticsService(TextAnalyticsAppConfiguration appConfig) : ITextAnalyticsService
 {
-    private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
-    private readonly string _key = configuration["AIServicesKey"]!;
+    private readonly string _endpoint = appConfig?.AIServicesEndpoint!;
+    private readonly string _key = appConfig?.AIServicesKey!;
 
-    public string GetLanguage(string text)
+    public async Task<string> GetLanguage(string text)
     {
         TextAnalyticsClient? client = new(new Uri(_endpoint), new AzureKeyCredential(_key));
 
-        DetectedLanguage detectedLanguage = client.DetectLanguage(text);
+        DetectedLanguage detectedLanguage = await client.DetectLanguageAsync(text);
 
         return detectedLanguage.Name;
     }
