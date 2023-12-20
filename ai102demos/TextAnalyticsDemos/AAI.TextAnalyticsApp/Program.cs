@@ -36,7 +36,7 @@ try
         if (userText?.ToLower() != "quit")
         {
             // Call function to detect language
-            string language = textAnalyticsService.GetLanguage(userText!);
+            string language = await textAnalyticsService.GetLanguage(userText!);
 
             WriteLine("Language: " + language);
         }

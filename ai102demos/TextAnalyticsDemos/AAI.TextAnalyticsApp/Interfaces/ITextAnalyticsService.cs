@@ -2,7 +2,7 @@
 
 public interface ITextAnalyticsService
 {
-    string GetLanguage(string text);
+    Task<string> GetLanguage(string text);
 }
 
 

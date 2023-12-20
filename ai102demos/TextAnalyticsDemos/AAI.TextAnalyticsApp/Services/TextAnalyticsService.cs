@@ -10,11 +10,11 @@ public class TextAnalyticsService(IConfiguration configuration) : ITextAnalytics
     private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
     private readonly string _key = configuration["AIServicesKey"]!;
 
-    public string GetLanguage(string text)
+    public async Task<string> GetLanguage(string text)
     {
         TextAnalyticsClient? client = new(new Uri(_endpoint), new AzureKeyCredential(_key));
 
-        DetectedLanguage detectedLanguage = client.DetectLanguage(text);
+        DetectedLanguage detectedLanguage = await client.DetectLanguageAsync(text);
 
         return detectedLanguage.Name;
     }
