@@ -13,6 +13,7 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
 {
     private readonly string _endpoint = configuration["AIServicesEndpoint"]!;
     private readonly string _key = configuration["AIServicesKey"]!;
+    private string _language = "";
 
     public async Task<string> GetLanguage(string text)
     {
@@ -36,7 +37,7 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
             UTF8Encoding utf8 = new(true, true);
             byte[] encodedBytes = utf8.GetBytes(jsonBody.ToString());
 
-            WriteLine(utf8.GetString(encodedBytes, 0, encodedBytes.Length));
+            //WriteLine(utf8.GetString(encodedBytes, 0, encodedBytes.Length));
 
             HttpClient client = new();
             NameValueCollection? queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -57,12 +58,13 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var results = JsonObject.Parse(responseContent);
-                WriteLine(results?.ToString());
+                //WriteLine(results?.ToString());
 
                 // Extract the detected language name for each document
                 foreach (JsonNode? document in results["documents"] as JsonArray)
                 {
-                    WriteLine($"\nLanguage: {document["detectedLanguage"]["name"]}");
+                    _language = document["detectedLanguage"]["name"]?.ToString() ?? "";
+                    //WriteLine($"\nLanguage: {_language}");
                 }
             }
             else
@@ -76,6 +78,6 @@ public class TextAnalyticsServiceRest(IConfiguration configuration) : ITextAnaly
             WriteLine(ex.Message);
         }
 
-        return "";
+        return _language;
     }
 }
