@@ -11,8 +11,8 @@ namespace AAI.TextAnalyticsApp.Services;
 
 public class TextAnalyticsServiceRest(TextAnalyticsAppConfiguration appConfig, IHttpClientFactory httpClientFactory) : ITextAnalyticsService
 {
-    private readonly string _endpoint = appConfig?.AIServicesEndpoint!;
-    private readonly string _key = appConfig?.AIServicesKey!;
+    private readonly string _endpoint = appConfig?.AiServicesEndpoint!;
+    private readonly string _key = appConfig?.AiServicesKey!;
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private string _language = "";
 

@@ -2,7 +2,7 @@
 
 public class TextAnalyticsAppConfiguration
 {
-    public string? AIServicesEndpoint { get; set; }
+    public string? AiServicesEndpoint { get; set; }
 
-    public string? AIServicesKey { get; set; }
+    public string? AiServicesKey { get; set; }
 }

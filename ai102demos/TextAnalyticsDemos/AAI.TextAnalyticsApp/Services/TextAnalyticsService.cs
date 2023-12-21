@@ -7,8 +7,8 @@ namespace AAI.TextAnalyticsApp.Services;
 
 public class TextAnalyticsService(TextAnalyticsAppConfiguration appConfig) : ITextAnalyticsService
 {
-    private readonly string _endpoint = appConfig?.AIServicesEndpoint!;
-    private readonly string _key = appConfig?.AIServicesKey!;
+    private readonly string _endpoint = appConfig?.AiServicesEndpoint!;
+    private readonly string _key = appConfig?.AiServicesKey!;
 
     public async Task<string> GetLanguage(string text)
     {
