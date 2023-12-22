@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+## Ignore these files when using Visual Studio Code
+.env
+.venv
