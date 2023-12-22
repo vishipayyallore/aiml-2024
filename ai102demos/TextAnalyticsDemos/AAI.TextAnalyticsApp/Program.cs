@@ -36,8 +36,6 @@ try
 
     while (userText?.ToLower() != "quit")
     {
-        ForegroundColor = ConsoleColor.DarkCyan;
-
         WriteLine("\nEnter some text ('quit' to stop)");
         userText = Console.ReadLine()!;
 
@@ -49,7 +47,6 @@ try
 
             WriteLine("Language Detected using SDK: " + language);
 
-            ForegroundColor = ConsoleColor.Yellow;
             WriteLine($"Calling Azure Cognitive Services with REST API ... with given {userText}");
 
             language = await textAnalyticsServiceRest.GetLanguage(userText!);
@@ -60,8 +57,6 @@ try
 }
 catch (Exception exception)
 {
-    ForegroundColor = ConsoleColor.Red;
-
     WriteLine(exception.Message);
 }
 finally
