@@ -5,6 +5,8 @@ This folder contains the sample for Azure Open AI.
 **Reference(s):**
 
 > 1. <https://learn.microsoft.com/en-gb/azure/ai-services/openai/dall-e-quickstart?pivots=programming-language-python&tabs=dalle3%2Ccommand-line>
+> 1. <https://github.com/openai/openai-python>
+> 1. <https://github.com/bharaththippireddy/azureopenaidemo>
 
 ## Create a .env file and update the Environment Variables
 
