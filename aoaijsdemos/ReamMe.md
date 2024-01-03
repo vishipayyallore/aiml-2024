@@ -26,5 +26,7 @@ npm create vite@latest
 npm install
 npm run dev
 
-npm create vite@latest todo-items-ts --template react-ts
+npm i react-router-dom
+npm i bootstrap
+npm i sass
 ```
