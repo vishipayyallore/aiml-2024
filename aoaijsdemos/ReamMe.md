@@ -29,4 +29,5 @@ npm run dev
 npm i react-router-dom
 npm i bootstrap
 npm i sass
+npm install --save-dev sass sass-loader
 ```

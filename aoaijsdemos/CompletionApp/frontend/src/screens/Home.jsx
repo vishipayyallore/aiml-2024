@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState } from 'react';
+
+import "./style/style.css";
 
 const Home = () => {
 
@@ -54,13 +56,8 @@ const Home = () => {
                 <div className='row form-group mt-2'>
                     <div className='col-sm-10'>
                         <div className='form-floating'>
-                            <textarea
-                                className='form-control custom-input'
-                                id='floatingInput'
-                                placeholder='Enter a prompt'
-                                value={inputValue}
-                                onChange={e => setInputValue(e.target.value)}
-                            />
+                            <textarea className='form-control custom-input' id='floatingInput'
+                                placeholder='Enter a prompt' value={inputValue} onChange={e => setInputValue(e.target.value)} />
                             <label htmlFor='floatingInput'>Input</label>
                         </div>
                     </div>
