@@ -6,29 +6,45 @@ app.use(express.json());
 
 dotenv.config();
 
-const { Configuration, OpenAIApi } = require('openai');
+// const { Configuration, OpenAIApi } = require('openai');
+const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
+const endpoint = process.env["AZURE_OPENAI_ENDPOINT"];
+const azureApiKey = process.env["OPENAI_G4_API_KEY"];
+// console.log('Azure OpenAI Endpoint: ', endpoint);
+// console.log('Azure OpenAI API Key: ', azureApiKey);
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY
-});
+const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
 
-const openai = new OpenAIApi(configuration);
+// const configuration = new Configuration({
+//     apiKey: process.env.OPENAI_G4_API_KEY
+// });
+
+// const openai = new OpenAIApi(configuration);
 
 async function runCompletion(prompt) {
-    const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 50
-    });
+    const deploymentName = process.env["COMPLETIONS_DEPLOYMENT_NAME"];
+    const response = await client.getCompletions(deploymentName, prompt);
+
+    // console.log('Response Received: ', response);
+    // const response = await openai.createCompletion({
+    //     model: "text-davinci-003",
+    //     prompt: prompt,
+    //     max_tokens: 50
+    // });
 
     return response;
 }
+
+app.get('/', function (req, res) {
+    res.send("Hello world!")
+});
 
 app.post('/api/chatgpt', async (req, res) => {
     try {
         const { text } = req.body;
 
         const completion = await runCompletion(text);
+        console.log('Completion: ', completion);
 
         res.json({ data: completion.data });
 
