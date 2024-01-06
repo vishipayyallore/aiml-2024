@@ -38,7 +38,6 @@ const Home = () => {
                 setJresult(JSON.stringify(data.data, null, 2));
                 setInputValue('');
                 setError('');
-
             } else {
                 throw new Error('An error occured');
             }
