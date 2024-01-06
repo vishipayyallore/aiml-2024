@@ -1,8 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const app = express();
+const cors = require('cors');
 
+const app = express();
 app.use(express.json());
+app.use(cors());    // Enable CORS for all routes
 
 dotenv.config();
 
@@ -15,7 +17,16 @@ const azOpenAiClient = new OpenAIClient(endpoint, new AzureKeyCredential(azureAp
 async function runCompletion(prompt) {
     const deploymentName = process.env["COMPLETIONS_DEPLOYMENT_NAME"];
 
-    const response = await azOpenAiClient.getCompletions(deploymentName, prompt);
+    const completionOptions = {
+        maxTokens: 150,
+        temperature: 0.9,
+        topP: 1,
+        frequencyPenalty: 0.0,
+        presencePenalty: 0.6,
+        stop: null
+    };
+
+    const response = await azOpenAiClient.getCompletions(deploymentName, prompt, completionOptions);
 
     return response;
 }
@@ -31,7 +42,7 @@ app.post('/api/chatcompletion', async (req, res) => {
         const completion = await runCompletion(text);
         console.log('Completion: ', completion.choices[0].text);
 
-        res.json({ data: completion.choices[0].text });
+        res.json({ data: completion });
 
     } catch (error) {
         if (error.response) {

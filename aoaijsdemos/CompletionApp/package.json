@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon backend/server.js",
-    "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm start\" \"npm run client\""
+    "server": "nodemon ./backend/server.js",
+    "client": "npm --prefix frontend run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "concurrently": "^8.0.1",
+    "cors": "^2.8.5",
     "csv-parse": "^5.4.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
