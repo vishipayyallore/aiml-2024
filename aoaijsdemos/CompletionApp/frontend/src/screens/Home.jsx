@@ -22,7 +22,7 @@ const Home = () => {
         }
 
         try {
-            const response = await fetch('/api/chatgpt', {
+            const response = await fetch('http://localhost:3000/api/chatcompletion', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,7 +38,6 @@ const Home = () => {
                 setJresult(JSON.stringify(data.data, null, 2));
                 setInputValue('');
                 setError('');
-
             } else {
                 throw new Error('An error occured');
             }
