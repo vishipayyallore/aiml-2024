@@ -6,47 +6,32 @@ app.use(express.json());
 
 dotenv.config();
 
-// const { Configuration, OpenAIApi } = require('openai');
 const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
 const endpoint = process.env["AZURE_OPENAI_ENDPOINT"];
 const azureApiKey = process.env["OPENAI_G4_API_KEY"];
-// console.log('Azure OpenAI Endpoint: ', endpoint);
-// console.log('Azure OpenAI API Key: ', azureApiKey);
 
-const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
-
-// const configuration = new Configuration({
-//     apiKey: process.env.OPENAI_G4_API_KEY
-// });
-
-// const openai = new OpenAIApi(configuration);
+const azOpenAiClient = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));
 
 async function runCompletion(prompt) {
     const deploymentName = process.env["COMPLETIONS_DEPLOYMENT_NAME"];
-    const response = await client.getCompletions(deploymentName, prompt);
 
-    // console.log('Response Received: ', response);
-    // const response = await openai.createCompletion({
-    //     model: "text-davinci-003",
-    //     prompt: prompt,
-    //     max_tokens: 50
-    // });
+    const response = await azOpenAiClient.getCompletions(deploymentName, prompt);
 
     return response;
 }
 
 app.get('/', function (req, res) {
-    res.send("Hello world!")
+    res.send("Welcome to Azure Open AI API")
 });
 
-app.post('/api/chatgpt', async (req, res) => {
+app.post('/api/chatcompletion', async (req, res) => {
     try {
         const { text } = req.body;
 
         const completion = await runCompletion(text);
-        console.log('Completion: ', completion);
+        console.log('Completion: ', completion.choices[0].text);
 
-        res.json({ data: completion.data });
+        res.json({ data: completion.choices[0].text });
 
     } catch (error) {
         if (error.response) {
@@ -63,6 +48,6 @@ app.post('/api/chatgpt', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
