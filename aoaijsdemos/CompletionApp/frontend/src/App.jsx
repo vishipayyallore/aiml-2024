@@ -7,12 +7,6 @@ import NavBar from './nav/NavBar';
 const App = () => {
   return (
     <>
-      {/* <nav className="navbar fixed-top navbar-dark bg-primary">
-        <div className="container">
-          <a className="navbar-brand" href="#">Completion App - Vite, React JS, Azure Open AI</a>
-        </div>
-      </nav> */}
-
       <NavBar />
       <div className="container my-5">
         <Router>
