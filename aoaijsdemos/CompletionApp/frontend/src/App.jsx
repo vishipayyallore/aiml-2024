@@ -6,11 +6,18 @@ import "./styles/bootstrap-custom.scss"
 const App = () => {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Router>
+      <nav className="navbar fixed-top navbar-dark bg-primary">
+        <div className="container">
+          <a className="navbar-brand" href="#">Completion App - Vite, React JS, Azure Open AI</a>
+        </div>
+      </nav>
+      <div className="container my-5">
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </Router>
+      </div>
     </>
   )
 }
