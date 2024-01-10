@@ -68,7 +68,7 @@ const Home = () => {
             {error && <div className='alert alert-danger mt-3'>{error}</div>}
             {prompt && <div className='alert alert-secondary mt-3'>{prompt}</div>}
             {result && <div className='alert alert-success mt-3'>{result}</div>}
-            {result && (<pre className='alert alert-info mt-3'><code>{jresult}</code></pre>)}
+            {result && (<pre className='alert alert-info mt-3' style={{ maxHeight: '320px', overflowY: 'auto' }}><code>{jresult}</code></pre>)}
         </div>
     );
 };
