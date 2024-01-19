@@ -52,7 +52,7 @@ const Home = () => {
     return (
         <div className='container'>
             <form className='form-horizontal' onSubmit={handleSubmit}>
-                <div className='row form-group mt-2'>
+                <div className='row form-group mt-1'>
                     <div className='col-sm-10'>
                         <div className='form-floating'>
                             <textarea className='form-control custom-input' id='floatingInput'
@@ -65,10 +65,10 @@ const Home = () => {
                     </div>
                 </div>
             </form>
-            {error && <div className='alert alert-danger mt-3'>{error}</div>}
-            {prompt && <div className='alert alert-secondary mt-3'>{prompt}</div>}
-            {result && <div className='alert alert-success mt-3'>{result}</div>}
-            {result && (<pre className='alert alert-info mt-3' style={{ maxHeight: '320px', overflowY: 'auto' }}><code>{jresult}</code></pre>)}
+            {error && <div className='alert alert-danger mt-2 text-start'>{error}</div>}
+            {prompt && <div className='alert alert-secondary mt-2 text-start'>{prompt}</div>}
+            {result && <div className='alert alert-success mt-2 text-start'>{result}</div>}
+            {result && (<pre className='alert alert-info mt-2 text-start' style={{ maxHeight: '320px', overflowY: 'auto' }}><code>{jresult}</code></pre>)}
         </div>
     );
 };
