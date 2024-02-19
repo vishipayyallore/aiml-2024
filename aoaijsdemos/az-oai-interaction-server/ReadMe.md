@@ -6,4 +6,6 @@
 npm init -y
 
 npm install express dotenv cors @azure/openai
+
+npm install --save-dev nodemon
 ```
