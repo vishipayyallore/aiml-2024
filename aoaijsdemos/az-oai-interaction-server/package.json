@@ -1,0 +1,12 @@
+{
+  "name": "az-oai-interaction-server",
+  "version": "1.0.1",
+  "description": "This is a Node JS API server that is used to interact with the Azure OAI API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Viswanatha Swamy P K",
+  "license": "MIT"
+}
