@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
-import http.client, base64, json, urllib
-from urllib import request, parse, error
+import http.client, json
 
 def main():
     global ai_endpoint
@@ -16,7 +15,7 @@ def main():
         # Get user input (until they enter "quit")
         userText =''
         while userText.lower() != 'quit':
-            userText = input('Enter some text ("quit" to stop)\n')
+            userText = input('Enter some text for Language Detection using Azure AI Services ("quit" to stop)\n')
             if userText.lower() != 'quit':
                 GetLanguage(userText)
 

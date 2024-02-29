@@ -16,7 +16,7 @@ def main():
         # Get user input (until they enter "quit")
         userText =''
         while userText.lower() != 'quit':
-            userText = input('\nEnter some text ("quit" to stop)\n')
+            userText = input('\nEnter some text for Language Detection using Azure AI Services ("quit" to stop)\n')
             if userText.lower() != 'quit':
                 language = GetLanguage(userText)
                 print('Language:', language)
