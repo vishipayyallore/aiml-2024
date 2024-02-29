@@ -45,7 +45,7 @@ try
         ForegroundColor = ConsoleColor.DarkCyan;
         
         WriteLine("\nEnter some text for Language Detection using Azure AI Services ('quit' to stop)");
-        userText = Console.ReadLine()!;
+        userText = ReadLine()!;
 
         if (userText?.ToLower() != Constants.QuitCommand)
         {
@@ -71,7 +71,7 @@ catch (Exception exception)
 }
 finally
 {
-    Console.ResetColor();
-    Console.WriteLine("\n\nPress any key ...");
-    Console.ReadKey();
+    ResetColor();
+    WriteLine("\n\nPress any key ...");
+    ReadKey();
 }
