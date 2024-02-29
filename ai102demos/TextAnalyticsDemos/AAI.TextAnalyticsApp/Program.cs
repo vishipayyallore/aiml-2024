@@ -3,6 +3,8 @@ using AAI.TextAnalyticsApp.Configuration;
 using AAI.TextAnalyticsApp.Extensions;
 using AAI.TextAnalyticsApp.Interfaces;
 using AAI.TextAnalyticsApp.Services;
+using HeaderFooter;
+using HeaderFooter.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,32 +30,40 @@ using IHost host = Host.CreateDefaultBuilder(args)
 // Now you can use the services provided by the host, including the configured IConfiguration
 ITextAnalyticsService textAnalyticsService = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsService));
 ITextAnalyticsService textAnalyticsServiceRest = host.Services.GetRequiredKeyedService<ITextAnalyticsService>(nameof(TextAnalyticsServiceRest));
+IHeader header = host.Services.GetRequiredService<IHeader>();
+IFooter footer = host.Services.GetRequiredService<IFooter>();
 
 try
 {
     // Get user input (until they enter "quit")
     string userText = "";
 
+    header.DisplayHeader('=', "Azure AI Services - Text Analytics");
+
     while (userText?.ToLower() != "quit")
     {
-        WriteLine("\nEnter some text ('quit' to stop)");
+        ForegroundColor = ConsoleColor.DarkCyan;
+        
+        WriteLine("\nEnter some text for Language Detection using Azure AI Services ('quit' to stop)");
         userText = Console.ReadLine()!;
 
         if (userText?.ToLower() != Constants.QuitCommand)
         {
-            WriteLine($"Calling Azure Cognitive Services with SDK ... with given {userText}");
+            WriteLine($"\nCalling Azure AI Services with SDK ... with given {userText}");
 
             string language = await textAnalyticsService.GetLanguage(userText!);
 
             WriteLine("Language Detected using SDK: " + language);
 
-            WriteLine($"Calling Azure Cognitive Services with REST API ... with given {userText}");
+            WriteLine($"\nCalling Azure AI Services with REST API ... with given {userText}");
 
             language = await textAnalyticsServiceRest.GetLanguage(userText!);
 
             WriteLine("Language Detected using REST API: " + language);
         }
     }
+
+    footer.DisplayFooter('-');
 }
 catch (Exception exception)
 {
