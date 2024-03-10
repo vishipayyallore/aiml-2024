@@ -3,7 +3,6 @@ using AAI.TextAnalyticsApp.Configuration;
 using AAI.TextAnalyticsApp.Extensions;
 using AAI.TextAnalyticsApp.Interfaces;
 using AAI.TextAnalyticsApp.Services;
-using HeaderFooter;
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
