@@ -8,6 +8,7 @@ using HeaderFooter.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text;
 
 using IHost host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) =>
@@ -43,7 +44,9 @@ try
     while (userText?.ToLower() != "quit")
     {
         ForegroundColor = ConsoleColor.DarkCyan;
-        
+        InputEncoding = Encoding.Unicode;
+        OutputEncoding = Encoding.Unicode;
+
         WriteLine("\nEnter some text for Language Detection using Azure AI Services ('quit' to stop)");
         userText = ReadLine()!;
 
