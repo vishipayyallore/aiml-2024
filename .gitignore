@@ -400,3 +400,4 @@ FodyWeavers.xsd
 ## Ignore these files when using Visual Studio Code
 .env
 .venv
+ai102demos/TextAnalyticsDemos/AAI.TextAnalyticsApp/appsettings.json
