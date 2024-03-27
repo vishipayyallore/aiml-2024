@@ -23,6 +23,8 @@ result = client.images.generate(
     n=1
 )
 
+print(result.model_dump_json())
+
 image_url = json.loads(result.model_dump_json())['data'][0]['url']
 print(image_url)
 
