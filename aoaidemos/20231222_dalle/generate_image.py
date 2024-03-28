@@ -4,6 +4,7 @@
 from openai import AzureOpenAI
 from dotenv import dotenv_values
 import json
+import os
 
 # Load config values
 config_details = dotenv_values(".env")
@@ -12,14 +13,17 @@ client = AzureOpenAI(
     api_version=config_details["OPENAI_API_VERSION"],
     azure_deployment=config_details["OPENAI_API_DEPLOYMENT"], # the name of your DALL-E 3 deployment
     azure_endpoint=config_details["OPENAI_API_ENDPOINT"],
-    api_key=config_details["OPENAI_API_KEY"],
+    api_key=os.getenv("OPENAI_API_KEY"),
 )
 
 result = client.images.generate(
     model="dall-e-3", # the name of your DALL-E 3 deployment
     prompt="Flag of India",
+    size="1024x1024",
     n=1
 )
+
+print(result.model_dump_json())
 
 image_url = json.loads(result.model_dump_json())['data'][0]['url']
 print(image_url)
