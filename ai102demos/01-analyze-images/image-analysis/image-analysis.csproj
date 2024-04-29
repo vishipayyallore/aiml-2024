@@ -6,6 +6,13 @@
 		<RootNamespace>image_analysis</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<UserSecretsId>fb603ff5-AzAIServices</UserSecretsId>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HeaderFooter" Version="1.1.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+	</ItemGroup>
 
 </Project>
