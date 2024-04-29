@@ -1,4 +1,4 @@
-﻿namespace image_analysis.Configuration;
+﻿namespace imageanalysis.Configuration;
 
 public class ImageAnalysisAppConfiguration
 {
