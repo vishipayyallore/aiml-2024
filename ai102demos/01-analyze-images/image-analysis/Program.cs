@@ -14,7 +14,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
                     .AddUserSecrets("fb603ff5-AzAIServices")
                     .Build();
 
-                ImageAnalysisAppConfiguration appConfig = new();
+                AzAISvcAppConfiguration appConfig = new();
                 configuration.GetSection("TextAnalyticsApp").Bind(appConfig);
 
                 services.AddSingleton(appConfig);

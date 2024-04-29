@@ -1,6 +1,6 @@
 ﻿namespace imageanalysis.Configuration;
 
-public class ImageAnalysisAppConfiguration
+public class AzAISvcAppConfiguration
 {
     public string? AiServicesEndpoint { get; set; }
 
