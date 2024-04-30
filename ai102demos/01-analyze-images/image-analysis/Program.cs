@@ -6,14 +6,12 @@ using imageanalysis.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
-using Image = System.Drawing.Image;
-using Font = System.Drawing.Font;
 using System.Net.Http.Headers;
-using System.Text.Json;
 using System.Text;
-using System.Net;
+using System.Text.Json;
+using Font = System.Drawing.Font;
+using Image = System.Drawing.Image;
 
 using IHost host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((_, services) =>
@@ -79,12 +77,7 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
 
     // Display analysis results
 
-    // Get image captions
-    if (result.Caption.Text != null)
-    {
-        WriteLine(" Caption:");
-        WriteLine($"   \"{result.Caption.Text}\", Confidence {result.Caption.Confidence:0.00}\n");
-    }
+    GetImageCaptions(result);
 
     // Get image dense captions
     WriteLine(" Dense Captions:");
@@ -124,7 +117,7 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
             var r = detectedObject.BoundingBox;
             Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
             graphics.DrawRectangle(pen, rect);
-            graphics.DrawString(detectedObject.Tags[0].Name, font, brush, (float)r.X, (float)r.Y);
+            graphics.DrawString(detectedObject.Tags[0].Name, font, brush, r.X, r.Y);
         }
 
         // Save annotated image
@@ -204,4 +197,14 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
         }
     }
 
+}
+
+static void GetImageCaptions(ImageAnalysisResult result)
+{
+    // Get image captions
+    if (result.Caption.Text is not null)
+    {
+        WriteLine(" Caption:");
+        WriteLine($"   \"{result.Caption.Text}\", Confidence {result.Caption.Confidence:0.00}\n");
+    }
 }
