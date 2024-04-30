@@ -13,23 +13,7 @@ using System.Text.Json;
 using Font = System.Drawing.Font;
 using Image = System.Drawing.Image;
 
-using IHost host = Host.CreateDefaultBuilder(args)
-            .ConfigureServices((_, services) =>
-            {
-                IConfiguration configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .AddUserSecrets("fb603ff5-AzAIServices")
-                    .Build();
-
-                AzAISvcAppConfiguration appConfig = new();
-                configuration.GetSection("AzAISvcAppConfiguration").Bind(appConfig);
-
-                services.AddSingleton(appConfig);
-
-                services.ConfigureServices();
-            })
-            .Build();
+using IHost host = GetHostBuilder(args);
 
 IHeader header = host.Services.GetRequiredService<IHeader>();
 IFooter footer = host.Services.GetRequiredService<IFooter>();
@@ -219,4 +203,25 @@ static void GetImageTags(TagsResult tagsResult)
             WriteLine($"   '{tag.Name}', Confidence: {tag.Confidence:F2}");
         }
     }
+}
+
+static IHost GetHostBuilder(string[] args)
+{
+    return Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) =>
+                {
+                    IConfiguration configuration = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddUserSecrets("fb603ff5-AzAIServices")
+                        .Build();
+
+                    AzAISvcAppConfiguration appConfig = new();
+                    configuration.GetSection("AzAISvcAppConfiguration").Bind(appConfig);
+
+                    services.AddSingleton(appConfig);
+
+                    services.ConfigureServices();
+                })
+                .Build();
 }
