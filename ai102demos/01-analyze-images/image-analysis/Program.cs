@@ -22,7 +22,8 @@ AzAISvcAppConfiguration appConfig = host.Services.GetRequiredService<AzAISvcAppC
 header.DisplayHeader('=', "Azure AI Services - Image Analysis");
 
 // Get image
-string imageFile = "images/street.jpg";
+//string imageFile = "images/street.jpg";
+string imageFile = "images/building.jpg";
 if (args.Length > 0)
 {
     imageFile = args[0];
@@ -76,13 +77,13 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
 
     // Display analysis results
 
-    ForegroundColor = ConsoleColor.DarkBlue;
+    ForegroundColor = ConsoleColor.Green;
     GetImageCaptions(result.Caption);
 
-    ForegroundColor = ConsoleColor.DarkGreen;
+    ForegroundColor = ConsoleColor.DarkMagenta;
     GetDenseCaptions(result.DenseCaptions);
 
-    ForegroundColor = ConsoleColor.DarkMagenta;
+    ForegroundColor = ConsoleColor.DarkGreen;
     GetImageTags(result.Tags);
 
     ForegroundColor = ConsoleColor.DarkCyan;
@@ -118,6 +119,7 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
     var data = new
     {
         url = "https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/images/street.jpg?raw=true"
+        //url = "https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/images/building.jpg?raw=true"
     };
 
     var jsonData = JsonSerializer.Serialize(data);
