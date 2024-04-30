@@ -42,6 +42,27 @@ ResetColor();
 WriteLine("\n\nPress any key ...");
 ReadKey();
 
+static IHost GetHostBuilder(string[] args)
+{
+    return Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) =>
+                {
+                    IConfiguration configuration = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddUserSecrets("fb603ff5-AzAIServices")
+                        .Build();
+
+                    AzAISvcAppConfiguration appConfig = new();
+                    configuration.GetSection("AzAISvcAppConfiguration").Bind(appConfig);
+
+                    services.AddSingleton(appConfig);
+
+                    services.ConfigureServices();
+                })
+                .Build();
+}
+
 static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
 {
     WriteLine($"\nAnalyzing {imageFile} \n");
@@ -61,74 +82,24 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
     ForegroundColor = ConsoleColor.DarkGreen;
     GetDenseCaptions(result.DenseCaptions);
 
-    ForegroundColor = ConsoleColor.DarkCyan;
+    ForegroundColor = ConsoleColor.DarkMagenta;
     GetImageTags(result.Tags);
 
-    // Get objects in the image
-    if (result.Objects.Values.Count > 0)
-    {
-        WriteLine(" Objects:");
+    ForegroundColor = ConsoleColor.DarkCyan;
+    GetObjects(imageFile, stream, result.Objects);
 
-        // Prepare image for drawing
-        stream.Close();
-        Image image = Image.FromFile(imageFile);
-        Graphics graphics = Graphics.FromImage(image);
-        Pen pen = new Pen(Color.Cyan, 3);
-        Font font = new Font("Arial", 16);
-        SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
+    ForegroundColor = ConsoleColor.DarkYellow;
+    GetPeople(imageFile, result.People);
 
-        foreach (DetectedObject detectedObject in result.Objects.Values)
-        {
-            Console.WriteLine($"   \"{detectedObject.Tags[0].Name}\"");
-
-            // Draw object bounding box
-            var r = detectedObject.BoundingBox;
-            Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-            graphics.DrawRectangle(pen, rect);
-            graphics.DrawString(detectedObject.Tags[0].Name, font, brush, r.X, r.Y);
-        }
-
-        // Save annotated image
-        String output_file = "objects.jpg";
-        image.Save(output_file);
-        WriteLine("  Results saved in " + output_file + "\n");
-    }
-
-    // Get people in the image
-    if (result.People.Values.Count > 0)
-    {
-        WriteLine($" People:");
-
-        // Prepare image for drawing
-        System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
-        Graphics graphics = Graphics.FromImage(image);
-        Pen pen = new Pen(Color.Cyan, 3);
-        Font font = new Font("Arial", 16);
-        SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
-
-        foreach (DetectedPerson person in result.People.Values)
-        {
-            // Draw object bounding box
-            var r = person.BoundingBox;
-            Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-            graphics.DrawRectangle(pen, rect);
-
-            // Return the confidence of the person detected
-            //Console.WriteLine($"   Bounding box {person.BoundingBox.ToString()}, Confidence: {person.Confidence:F2}");
-        }
-
-        // Save annotated image
-        String output_file = "persons.jpg";
-        image.Save(output_file);
-        WriteLine("  Results saved in " + output_file + "\n");
-    }
-
+    ResetColor();
 }
 
 static async Task BackgroundForeground(string imageFile, string endpoint, string key)
 {
+    ForegroundColor = ConsoleColor.Magenta;
     // Remove the background from the image or generate a foreground matte
-    Console.WriteLine($" Background removal:");
+    WriteLine($" \bBackground removal:");
+
     // Define the API version and mode
     string apiVersion = "2023-02-01-preview";
     string mode = "backgroundRemoval"; // Can be "foregroundMatting" or "backgroundRemoval"
@@ -136,33 +107,31 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
     string url = $"computervision/imageanalysis:segment?api-version={apiVersion}&mode={mode}";
 
     // Make the REST call
-    using (var client = new HttpClient())
+    using var client = new HttpClient();
+    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+    client.BaseAddress = new Uri(endpoint);
+    client.DefaultRequestHeaders.Accept.Add(contentType);
+    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+
+    // You can change the url to use other images in the images folder,
+    // such as "building.jpg" or "person.jpg" to see different results.
+    var data = new
     {
-        var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-        client.BaseAddress = new Uri(endpoint);
-        client.DefaultRequestHeaders.Accept.Add(contentType);
-        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+        url = "https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/images/street.jpg?raw=true"
+    };
 
-        // You can change the url to use other images in the images folder,
-        // such as "building.jpg" or "person.jpg" to see different results.
-        var data = new
-        {
-            url = "https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/images/street.jpg?raw=true"
-        };
+    var jsonData = JsonSerializer.Serialize(data);
+    var contentData = new StringContent(jsonData, Encoding.UTF8, contentType);
+    var response = await client.PostAsync(url, contentData);
 
-        var jsonData = JsonSerializer.Serialize(data);
-        var contentData = new StringContent(jsonData, Encoding.UTF8, contentType);
-        var response = await client.PostAsync(url, contentData);
-
-        if (response.IsSuccessStatusCode)
-        {
-            File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
-            Console.WriteLine("  Results saved in background.png\n");
-        }
-        else
-        {
-            Console.WriteLine($"API error: {response.ReasonPhrase} - Check your body url, key, and endpoint.");
-        }
+    if (response.IsSuccessStatusCode)
+    {
+        File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
+        WriteLine("  Results saved in background.png\n");
+    }
+    else
+    {
+        WriteLine($"API error: {response.ReasonPhrase} - Check your body url, key, and endpoint.");
     }
 
 }
@@ -205,23 +174,67 @@ static void GetImageTags(TagsResult tagsResult)
     }
 }
 
-static IHost GetHostBuilder(string[] args)
+static void GetObjects(string imageFile, FileStream stream, ObjectsResult objectsResult)
 {
-    return Host.CreateDefaultBuilder(args)
-                .ConfigureServices((_, services) =>
-                {
-                    IConfiguration configuration = new ConfigurationBuilder()
-                        .SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddUserSecrets("fb603ff5-AzAIServices")
-                        .Build();
+    // Get objects in the image
+    if (objectsResult.Values.Count > 0)
+    {
+        WriteLine("\n Retrieving Objects:");
 
-                    AzAISvcAppConfiguration appConfig = new();
-                    configuration.GetSection("AzAISvcAppConfiguration").Bind(appConfig);
+        // Prepare image for drawing
+        stream.Close();
+        Image image = Image.FromFile(imageFile);
+        Graphics graphics = Graphics.FromImage(image);
+        Pen pen = new(Color.Cyan, 3);
+        Font font = new("Arial", 16);
+        SolidBrush brush = new(Color.WhiteSmoke);
 
-                    services.AddSingleton(appConfig);
+        foreach (DetectedObject detectedObject in objectsResult.Values)
+        {
+            WriteLine($"   \"{detectedObject.Tags[0].Name}\"");
 
-                    services.ConfigureServices();
-                })
-                .Build();
+            // Draw object bounding box
+            var r = detectedObject.BoundingBox;
+            Rectangle rect = new(r.X, r.Y, r.Width, r.Height);
+            graphics.DrawRectangle(pen, rect);
+            graphics.DrawString(detectedObject.Tags[0].Name, font, brush, r.X, r.Y);
+        }
+
+        // Save annotated image
+        String output_file = "objects.jpg";
+        image.Save(output_file);
+        WriteLine("  Results saved in " + output_file + "\n");
+    }
+}
+
+static void GetPeople(string imageFile, PeopleResult peopleResult)
+{
+    // Get people in the image
+    if (peopleResult.Values.Count > 0)
+    {
+        WriteLine($" Retrieving People:");
+
+        // Prepare image for drawing
+        System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
+        Graphics graphics = Graphics.FromImage(image);
+        Pen pen = new(Color.Cyan, 3);
+        Font font = new("Arial", 16);
+        SolidBrush brush = new(Color.WhiteSmoke);
+
+        foreach (DetectedPerson person in peopleResult.Values)
+        {
+            // Draw object bounding box
+            var r = person.BoundingBox;
+            Rectangle rect = new(r.X, r.Y, r.Width, r.Height);
+            graphics.DrawRectangle(pen, rect);
+
+            // Return the confidence of the person detected
+            WriteLine($"   Bounding box {person.BoundingBox}, Confidence: {person.Confidence:F2}");
+        }
+
+        // Save annotated image
+        String output_file = "persons.jpg";
+        image.Save(output_file);
+        WriteLine("  Results saved in " + output_file + "\n");
+    }
 }
