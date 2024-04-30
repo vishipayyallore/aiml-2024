@@ -401,3 +401,7 @@ FodyWeavers.xsd
 .env
 .venv
 ai102demos/TextAnalyticsDemos/AAI.TextAnalyticsApp/appsettings.json
+ai102demos/01-analyze-images/image-analysis/appsettings.json
+ai102demos/01-analyze-images/image-analysis/images/building.jpg
+ai102demos/01-analyze-images/image-analysis/images/person.jpg
+ai102demos/01-analyze-images/image-analysis/images/street.jpg
