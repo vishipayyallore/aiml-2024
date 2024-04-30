@@ -66,40 +66,24 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
     using FileStream stream = new(imageFile, FileMode.Open);
 
     // Get result with specified features to be retrieved
-    ImageAnalysisResult result = client.Analyze(
-        BinaryData.FromStream(stream),
-        VisualFeatures.Caption |
-        VisualFeatures.DenseCaptions |
-        VisualFeatures.Objects |
-        VisualFeatures.Tags |
-        VisualFeatures.People);
-
+    ImageAnalysisResult result = client.Analyze(BinaryData.FromStream(stream),
+        VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Objects | VisualFeatures.Tags | VisualFeatures.People);
 
     // Display analysis results
 
-    GetImageCaptions(result);
+    ForegroundColor = ConsoleColor.DarkBlue;
+    GetImageCaptions(result.Caption);
 
-    // Get image dense captions
-    WriteLine(" Dense Captions:");
-    foreach (DenseCaption denseCaption in result.DenseCaptions.Values)
-    {
-        WriteLine($"   Caption: '{denseCaption.Text}', Confidence: {denseCaption.Confidence:0.00}");
-    }
+    ForegroundColor = ConsoleColor.DarkGreen;
+    GetDenseCaptions(result.DenseCaptions);
 
-    // Get image tags
-    if (result.Tags.Values.Count > 0)
-    {
-        Console.WriteLine($"\n Tags:");
-        foreach (DetectedTag tag in result.Tags.Values)
-        {
-            Console.WriteLine($"   '{tag.Name}', Confidence: {tag.Confidence:F2}");
-        }
-    }
+    ForegroundColor = ConsoleColor.DarkCyan;
+    GetImageTags(result.Tags);
 
     // Get objects in the image
     if (result.Objects.Values.Count > 0)
     {
-        Console.WriteLine(" Objects:");
+        WriteLine(" Objects:");
 
         // Prepare image for drawing
         stream.Close();
@@ -123,13 +107,13 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
         // Save annotated image
         String output_file = "objects.jpg";
         image.Save(output_file);
-        Console.WriteLine("  Results saved in " + output_file + "\n");
+        WriteLine("  Results saved in " + output_file + "\n");
     }
 
     // Get people in the image
     if (result.People.Values.Count > 0)
     {
-        Console.WriteLine($" People:");
+        WriteLine($" People:");
 
         // Prepare image for drawing
         System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
@@ -152,7 +136,7 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
         // Save annotated image
         String output_file = "persons.jpg";
         image.Save(output_file);
-        Console.WriteLine("  Results saved in " + output_file + "\n");
+        WriteLine("  Results saved in " + output_file + "\n");
     }
 
 }
@@ -199,12 +183,40 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
 
 }
 
-static void GetImageCaptions(ImageAnalysisResult result)
+static void GetImageCaptions(CaptionResult captionResult)
 {
+    WriteLine("\nShow image captions: ");
+
     // Get image captions
-    if (result.Caption.Text is not null)
+    if (captionResult.Text is not null)
     {
         WriteLine(" Caption:");
-        WriteLine($"   \"{result.Caption.Text}\", Confidence {result.Caption.Confidence:0.00}\n");
+        WriteLine($"   \"{captionResult.Text}\", Confidence {captionResult.Confidence:0.00}\n");
+    }
+}
+
+static void GetDenseCaptions(DenseCaptionsResult denseCaptionsResult)
+{
+    WriteLine("\nShow image dense captions: ");
+    // Get image dense captions
+    WriteLine(" Dense Captions:");
+    foreach (DenseCaption denseCaption in denseCaptionsResult.Values)
+    {
+        WriteLine($"   Caption: '{denseCaption.Text}', Confidence: {denseCaption.Confidence:0.00}");
+    }
+}
+
+static void GetImageTags(TagsResult tagsResult)
+{
+    WriteLine("\nShow image tags:");
+
+    // Get image tags
+    if (tagsResult.Values.Count > 0)
+    {
+        WriteLine($"\n Tags:");
+        foreach (DetectedTag tag in tagsResult.Values)
+        {
+            WriteLine($"   '{tag.Name}', Confidence: {tag.Confidence:F2}");
+        }
     }
 }
