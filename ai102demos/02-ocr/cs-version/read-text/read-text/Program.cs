@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using read_text.Configuration;
 using read_text.Extensions;
+using System.Drawing;
 
 using IHost host = GetHostBuilder(args);
 
@@ -58,6 +59,56 @@ static void GetTextRead(string imageFile, ImageAnalysisClient client)
     using FileStream stream = new(imageFile, FileMode.Open);
 
     // Use Analyze image function to read text in image
+    ImageAnalysisResult result = client.Analyze(
+        BinaryData.FromStream(stream),
+        // Specify the features to be retrieved
+        VisualFeatures.Read);
+
+    stream.Close();
+
+    // Display analysis results
+    if (result.Read != null)
+    {
+        Console.WriteLine($"Text:");
+
+        // Prepare image for drawing
+        Image image = Image.FromFile(imageFile);
+        Graphics graphics = Graphics.FromImage(image);
+        Pen pen = new Pen(Color.Cyan, 3);
+
+        foreach (var line in result.Read.Blocks.SelectMany(block => block.Lines))
+        {
+            // Return the text detected in the image
+            Console.WriteLine($"   '{line.Text}'");
+
+            // Draw bounding box around line
+            var drawLinePolygon = true;
+
+            // Return the position bounding box around each line
+            // Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+
+            // Draw line bounding polygon
+            if (drawLinePolygon)
+            {
+                var r = line.BoundingPolygon;
+
+                Point[] polygonPoints = {
+                 new(r[0].X, r[0].Y),
+                 new(r[1].X, r[1].Y),
+                 new(r[2].X, r[2].Y),
+                 new(r[3].X, r[3].Y)
+             };
+
+                graphics.DrawPolygon(pen, polygonPoints);
+            }
+
+        }
+
+        // Save image
+        String output_file = "./images/text.jpg";
+        image.Save(output_file);
+        Console.WriteLine("\nResults saved in " + output_file + "\n");
+    }
 }
 
 static IHost GetHostBuilder(string[] args)
