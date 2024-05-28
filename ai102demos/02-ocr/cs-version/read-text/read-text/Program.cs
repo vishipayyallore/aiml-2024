@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using read_text.Configuration;
 using read_text.Extensions;
 using System.Drawing;
+using Image = System.Drawing.Image;
 
 using IHost host = GetHostBuilder(args);
 
@@ -19,6 +20,8 @@ header.DisplayHeader('=', "Azure AI Services - OCR Read Text");
 try
 {
     ImageAnalysisClient client = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
+
+    ForegroundColor = ConsoleColor.DarkCyan;
 
     // Menu for text reading functions
     WriteLine("\n1: Use Read API for image (Lincoln.jpg)\n2: Read handwriting (Note.jpg)\nAny other key to quit\n");
@@ -69,7 +72,7 @@ static void GetTextRead(string imageFile, ImageAnalysisClient client)
     // Display analysis results
     if (result.Read != null)
     {
-        Console.WriteLine($"Text:");
+        WriteLine($"Text:");
 
         // Prepare image for drawing
         Image image = Image.FromFile(imageFile);
@@ -78,26 +81,49 @@ static void GetTextRead(string imageFile, ImageAnalysisClient client)
 
         foreach (var line in result.Read.Blocks.SelectMany(block => block.Lines))
         {
+            ForegroundColor = ConsoleColor.DarkGreen;
+
             // Return the text detected in the image
-            Console.WriteLine($"   '{line.Text}'");
+            WriteLine($"   '{line.Text}'");
 
             // Draw bounding box around line
             var drawLinePolygon = true;
 
             // Return the position bounding box around each line
+            WriteLine($"   Bounding Polygon: [{string.Join(" ", line.BoundingPolygon)}]");
+
+            ForegroundColor = ConsoleColor.DarkYellow;
+
             // Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+            foreach (DetectedTextWord word in line.Words)
+            {
+                Console.WriteLine($"     Word: '{word.Text}', Confidence {word.Confidence:F4}, Bounding Polygon: [{string.Join(" ", word.BoundingPolygon)}]");
+
+                // Draw word bounding polygon
+                drawLinePolygon = false;
+                var r = word.BoundingPolygon;
+
+                Point[] polygonPoints = [
+                    new (r[0].X, r[0].Y),
+                    new (r[1].X, r[1].Y),
+                    new (r[2].X, r[2].Y),
+                    new (r[3].X, r[3].Y)
+                ];
+
+                graphics.DrawPolygon(pen, polygonPoints);
+            }
 
             // Draw line bounding polygon
             if (drawLinePolygon)
             {
                 var r = line.BoundingPolygon;
 
-                Point[] polygonPoints = {
+                Point[] polygonPoints = [
                  new(r[0].X, r[0].Y),
                  new(r[1].X, r[1].Y),
                  new(r[2].X, r[2].Y),
                  new(r[3].X, r[3].Y)
-             };
+                ];
 
                 graphics.DrawPolygon(pen, polygonPoints);
             }
@@ -107,7 +133,8 @@ static void GetTextRead(string imageFile, ImageAnalysisClient client)
         // Save image
         String output_file = "./images/text.jpg";
         image.Save(output_file);
-        Console.WriteLine("\nResults saved in " + output_file + "\n");
+
+        WriteLine("\nResults saved in " + output_file + "\n");
     }
 }
 
