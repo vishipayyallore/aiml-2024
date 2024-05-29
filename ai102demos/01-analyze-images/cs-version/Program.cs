@@ -26,8 +26,8 @@ header.DisplayHeader('=', "Azure AI Services - Image Analysis");
 //string imageFile = "images/building.jpg";
 //string imageFile = "images/man_door_1.jpg";
 //string imageFile = "images/man_door_2.jpg";
-string imageFile = "images/man_door_3.jpg";
-//string imageFile = "images/man_door_4.jpg";
+//string imageFile = "images/man_door_3.jpg";
+string imageFile = "images/man_door_4.jpg";
 if (args.Length > 0)
 {
     imageFile = args[0];
