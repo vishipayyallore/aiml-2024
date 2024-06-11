@@ -24,7 +24,7 @@ try
     VisionServiceOptions cvClient = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
 
     // Get image
-    string imageFile = "images/people.jpg";
+    string imageFile = "images/people3.jpg";
     if (args.Length > 0)
     {
         imageFile = args[0];

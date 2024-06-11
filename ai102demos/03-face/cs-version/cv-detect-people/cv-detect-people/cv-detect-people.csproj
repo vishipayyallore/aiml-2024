@@ -10,13 +10,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="images\people.jpg" />
+		<None Remove="images\people.jpg" />
+		<None Remove="images\people1.jpg" />
+		<None Remove="images\people2.jpg" />
+		<None Remove="images\people3.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="images\people.jpg">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="images\people.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people1.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people2.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people3.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
