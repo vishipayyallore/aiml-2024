@@ -34,8 +34,6 @@ try
 
     // Analyze image
     AnalyzeImage(imageFile, cvClient);
-
-    ForegroundColor = ConsoleColor.DarkCyan;
 }
 catch (Exception ex)
 {
@@ -96,12 +94,19 @@ static void AnalyzeImage(string imageFile, VisionServiceOptions serviceOptions)
                     // Return the confidence of the person detected
                     WriteLine($"   Bounding box {person.BoundingBox}, Confidence {person.Confidence:0.0000}");
                 }
+                else
+                {
+                    ForegroundColor = ConsoleColor.DarkMagenta;
+                    WriteLine($"   Person detected but confidence is too low: {person.Confidence:0.0000}");
+                    ResetColor();
+                }
             }
 
+            ForegroundColor = ConsoleColor.DarkCyan;
             // Save annotated image
             String output_file = "./images/detected_people.jpg";
             image.Save(output_file);
-            WriteLine("  Results saved in " + output_file + "\n");
+            WriteLine("\n\n\tResults saved in " + output_file + "\n");
         }
     }
     else
