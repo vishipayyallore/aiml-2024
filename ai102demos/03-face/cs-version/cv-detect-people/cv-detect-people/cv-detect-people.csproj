@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>cv_detect_people</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UserSecretsId>fb603ff5-AzAIServices</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="images\people.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="images\people.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.AI.Vision.Common" Version="0.15.1-beta.1" />
+		<PackageReference Include="Azure.AI.Vision.Core" Version="0.10.0-beta.1" />
+		<PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="0.15.1-beta.1" />
+		<PackageReference Include="HeaderFooter" Version="1.1.3" />
+		<PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="7.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.5" />
+		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="System.Console" Static="true" />
+	</ItemGroup>
+
+</Project>
