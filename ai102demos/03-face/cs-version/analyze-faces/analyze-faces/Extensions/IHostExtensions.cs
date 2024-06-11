@@ -1,9 +1,10 @@
-﻿using cv_detect_people.Configuration;
+﻿using analyze_faces.Configuration;
+using analyze_faces.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace cv_detect_people.Extensions;
+namespace analyze_faces.Extensions;
 
 public static class IHostExtensions
 {

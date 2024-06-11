@@ -2,7 +2,7 @@
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace cv_detect_people.Extensions;
+namespace analyze_faces.Extensions;
 
 public static class ReadTextAppExtensions
 {

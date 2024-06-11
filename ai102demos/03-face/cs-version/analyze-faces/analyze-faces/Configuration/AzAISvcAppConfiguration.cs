@@ -1,4 +1,4 @@
-﻿namespace cv_detect_people.Configuration;
+﻿namespace analyze_faces.Configuration;
 
 public class AzAISvcAppConfiguration
 {
