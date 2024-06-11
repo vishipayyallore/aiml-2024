@@ -24,11 +24,13 @@ try
     VisionServiceOptions cvClient = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
 
     // Get image
-    string imageFile = "images/people3.jpg";
+    string imageFile = "images/people4.jpg";
     if (args.Length > 0)
     {
         imageFile = args[0];
     }
+
+    ForegroundColor = ConsoleColor.DarkCyan;
 
     // Analyze image
     AnalyzeImage(imageFile, cvClient);
