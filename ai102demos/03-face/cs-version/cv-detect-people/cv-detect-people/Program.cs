@@ -24,7 +24,7 @@ try
     VisionServiceOptions cvClient = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
 
     // Get image
-    string imageFile = "images/people4.jpg";
+    string imageFile = "images/people5.jpg";
     if (args.Length > 0)
     {
         imageFile = args[0];
@@ -107,9 +107,9 @@ static void AnalyzeImage(string imageFile, VisionServiceOptions serviceOptions)
     else
     {
         var errorDetails = ImageAnalysisErrorDetails.FromResult(result);
-        Console.WriteLine(" Analysis failed.");
-        Console.WriteLine($"   Error reason : {errorDetails.Reason}");
-        Console.WriteLine($"   Error code : {errorDetails.ErrorCode}");
-        Console.WriteLine($"   Error message: {errorDetails.Message}\n");
+        WriteLine(" Analysis failed.");
+        WriteLine($"   Error reason : {errorDetails.Reason}");
+        WriteLine($"   Error code : {errorDetails.ErrorCode}");
+        WriteLine($"   Error message: {errorDetails.Message}\n");
     }
 }
