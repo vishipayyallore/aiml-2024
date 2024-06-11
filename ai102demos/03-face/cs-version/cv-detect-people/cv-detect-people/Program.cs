@@ -1,15 +1,14 @@
-﻿using cv_detect_people.Configuration;
+﻿using Azure;
+using Azure.AI.Vision.Common;
+using Azure.AI.Vision.ImageAnalysis;
+using cv_detect_people.Configuration;
 using cv_detect_people.Extensions;
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Azure.AI.Vision.ImageAnalysis;
-using Azure;
-using Azure.AI.Vision.Common;
-using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
-using Image = System.Drawing.Image;
 using Font = System.Drawing.Font;
+using Image = System.Drawing.Image;
 
 using IHost host = IHostExtensions.GetHostBuilder(args);
 
