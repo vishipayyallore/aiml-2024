@@ -25,6 +25,8 @@ try
         Endpoint = appConfig.AiServicesEndpoint
     };
 
+    ForegroundColor = ConsoleColor.DarkCyan;
+
     // Menu for face functions
     Console.WriteLine("1: Detect faces people.jpg,\n2: Detect faces people4.jpg,\nAny other key to quit");
     Console.WriteLine("Enter a number:");
@@ -56,6 +58,8 @@ ReadKey();
 
 async Task DetectFaces(string imageFile)
 {
+    ForegroundColor = ConsoleColor.DarkGreen;
+
     WriteLine($"Detecting faces in {imageFile}");
 
     // Specify facial features to be retrieved
