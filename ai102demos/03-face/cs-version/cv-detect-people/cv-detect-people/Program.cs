@@ -1,15 +1,14 @@
-﻿using cv_detect_people.Configuration;
+﻿using Azure;
+using Azure.AI.Vision.Common;
+using Azure.AI.Vision.ImageAnalysis;
+using cv_detect_people.Configuration;
 using cv_detect_people.Extensions;
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Azure.AI.Vision.ImageAnalysis;
-using Azure;
-using Azure.AI.Vision.Common;
-using static System.Net.Mime.MediaTypeNames;
 using System.Drawing;
-using Image = System.Drawing.Image;
 using Font = System.Drawing.Font;
+using Image = System.Drawing.Image;
 
 using IHost host = IHostExtensions.GetHostBuilder(args);
 
@@ -24,16 +23,16 @@ try
     VisionServiceOptions cvClient = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
 
     // Get image
-    string imageFile = "images/people.jpg";
+    string imageFile = "images/people5.jpg";
     if (args.Length > 0)
     {
         imageFile = args[0];
     }
 
+    ForegroundColor = ConsoleColor.DarkCyan;
+
     // Analyze image
     AnalyzeImage(imageFile, cvClient);
-
-    ForegroundColor = ConsoleColor.DarkCyan;
 }
 catch (Exception ex)
 {
@@ -94,20 +93,27 @@ static void AnalyzeImage(string imageFile, VisionServiceOptions serviceOptions)
                     // Return the confidence of the person detected
                     WriteLine($"   Bounding box {person.BoundingBox}, Confidence {person.Confidence:0.0000}");
                 }
+                else
+                {
+                    ForegroundColor = ConsoleColor.DarkMagenta;
+                    WriteLine($"   Person detected but confidence is too low: {person.Confidence:0.0000}");
+                    ResetColor();
+                }
             }
 
+            ForegroundColor = ConsoleColor.DarkCyan;
             // Save annotated image
             String output_file = "./images/detected_people.jpg";
             image.Save(output_file);
-            WriteLine("  Results saved in " + output_file + "\n");
+            WriteLine("\n\n\tResults saved in " + output_file + "\n");
         }
     }
     else
     {
         var errorDetails = ImageAnalysisErrorDetails.FromResult(result);
-        Console.WriteLine(" Analysis failed.");
-        Console.WriteLine($"   Error reason : {errorDetails.Reason}");
-        Console.WriteLine($"   Error code : {errorDetails.ErrorCode}");
-        Console.WriteLine($"   Error message: {errorDetails.Message}\n");
+        WriteLine(" Analysis failed.");
+        WriteLine($"   Error reason : {errorDetails.Reason}");
+        WriteLine($"   Error code : {errorDetails.ErrorCode}");
+        WriteLine($"   Error message: {errorDetails.Message}\n");
     }
 }

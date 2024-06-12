@@ -10,26 +10,42 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="images\people.jpg" />
+		<None Remove="images\people.jpg" />
+		<None Remove="images\people1.jpg" />
+		<None Remove="images\people2.jpg" />
+		<None Remove="images\people3.jpg" />
+		<None Remove="images\people4.jpg" />
+		<None Remove="images\people5.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Include="images\people.jpg">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+		<Content Include="images\people.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people1.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people2.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people3.jpg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people4.jpg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="images\people5.jpg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.AI.Vision.Common" Version="0.15.1-beta.1" />
-		<PackageReference Include="Azure.AI.Vision.Core" Version="0.10.0-beta.1" />
 		<PackageReference Include="Azure.AI.Vision.ImageAnalysis" Version="0.15.1-beta.1" />
 		<PackageReference Include="HeaderFooter" Version="1.1.3" />
-		<PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.5" />
-		<PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
