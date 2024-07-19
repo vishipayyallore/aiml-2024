@@ -4,8 +4,7 @@ using FirstSample.Extensions;
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenAI;
-using System.ClientModel;
+using Azure.AI.OpenAI;
 using System.Net;
 
 using IHost host = IHostExtensions.GetHostBuilder(args);
@@ -18,24 +17,29 @@ header.DisplayHeader('=', "Azure OpenAI Completions - Sample 1");
 
 try
 {
-    OpenAIClientOptions openAIClientOptions = new()
-    {
-        Endpoint = new Uri(appConfig.AzureOpenAiEndpoint!)
-    };
+    ForegroundColor = ConsoleColor.DarkCyan;
+    const string prompt = "When was Microsoft founded?";
 
-    var client = new OpenAIClient(new ApiKeyCredential(appConfig.AzureOpenAiKey), openAIClientOptions);
-
-    const string prompt = "What are the top 10 countries with highest populations are along with their population count and capital city : \n";
+    OpenAIClient client = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
 
     CompletionsOptions completionsOptions = new()
     {
-        DeploymentName = "gpt-35-turbo-instruct",
-        Prompts = { "When was Microsoft founded?" },
+        DeploymentName = "gpt-35-turbo-dname",
+        Prompts = { $"{prompt}" },
+        Echo = true,
+        MaxTokens = 150,
+        Temperature = 0
     };
 
+    WriteLine($"User Prompt: {prompt}");
+
     Response<Completions> completionsResponse = client.GetCompletions(completionsOptions);
+    WriteLine($"Response Received: {completionsResponse.Value.Choices}");
+
     string completion = completionsResponse.Value.Choices[0].Text;
-    Console.WriteLine($"Chatbot: {completion}");
+    WriteLine($"\n\nChatbot: {completion}");
+
+    ResetColor();
 }
 catch (Exception)
 {
