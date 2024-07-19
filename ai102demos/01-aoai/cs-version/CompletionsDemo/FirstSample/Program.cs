@@ -1,11 +1,10 @@
 ﻿using Azure;
+using Azure.AI.OpenAI;
 using FirstSample.Configuration;
 using FirstSample.Extensions;
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Azure.AI.OpenAI;
-using System.Net;
 
 using IHost host = IHostExtensions.GetHostBuilder(args);
 
@@ -38,6 +37,17 @@ try
 
     string completion = completionsResponse.Value.Choices[0].Text;
     WriteLine($"\n\nChatbot: {completion}");
+
+    ForegroundColor = ConsoleColor.DarkGreen;
+    WriteLine("\nStreaming Completions ...\n");
+    StreamingResponse<Completions> response = await client.GetCompletionsStreamingAsync(completionsOptions);
+    await foreach (Completions streamCompletion in response.EnumerateValues())
+    {
+        foreach (var choice in streamCompletion.Choices)
+        {
+            Console.Write($"{choice.Text}");
+        }
+    }
 
     ResetColor();
 }
