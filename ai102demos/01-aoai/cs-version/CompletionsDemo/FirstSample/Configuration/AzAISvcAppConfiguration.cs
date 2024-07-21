@@ -8,5 +8,5 @@ public class AzAISvcAppConfiguration
 
     public string? AzureOpenAiEndpoint { get; set; }
 
-    public string AzureOpenAiKey { get; set; }
+    public string? AzureOpenAiKey { get; set; }
 }
