@@ -111,7 +111,7 @@ def AnalyzeImage(image_filename, image_data, cv_client):
         # Save annotated image
         plt.imshow(image)
         plt.tight_layout(pad=0)
-        outputfile = 'objects.jpg'
+        outputfile = './images/objects.jpg'
         fig.savefig(outputfile)
         print('  Results saved in', outputfile)
 
@@ -138,7 +138,7 @@ def AnalyzeImage(image_filename, image_data, cv_client):
         # Save annotated image
         plt.imshow(image)
         plt.tight_layout(pad=0)
-        outputfile = 'people.jpg'
+        outputfile = './images/people.jpg'
         fig.savefig(outputfile)
         print('  Results saved in', outputfile)
 
@@ -169,7 +169,7 @@ def BackgroundForeground(endpoint, key, image_file):
     response = requests.post(url, headers=headers, json=body)
 
     image = response.content
-    with open("background.png", "wb") as file:
+    with open("./images/background.png", "wb") as file:
         file.write(image)
     print('  Results saved in background.png \n')
 
