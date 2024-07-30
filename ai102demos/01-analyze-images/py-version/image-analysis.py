@@ -116,6 +116,31 @@ def AnalyzeImage(image_filename, image_data, cv_client):
         print('  Results saved in', outputfile)
 
     # Get people in the image
+    if result.people is not None:
+        print("\nPeople in image:")
+
+        # Prepare image for drawing
+        image = Image.open(image_filename)
+        fig = plt.figure(figsize=(image.width/100, image.height/100))
+        plt.axis('off')
+        draw = ImageDraw.Draw(image)
+        color = 'cyan'
+
+        for detected_people in result.people.list:
+            # Draw object bounding box
+            r = detected_people.bounding_box
+            bounding_box = ((r.x, r.y), (r.x + r.width, r.y + r.height))
+            draw.rectangle(bounding_box, outline=color, width=3)
+
+            # Return the confidence of the person detected
+            # print(" {} (confidence: {:.2f}%)".format(detected_people.bounding_box, detected_people.confidence * 100))
+
+        # Save annotated image
+        plt.imshow(image)
+        plt.tight_layout(pad=0)
+        outputfile = 'people.jpg'
+        fig.savefig(outputfile)
+        print('  Results saved in', outputfile)
 
 
 def BackgroundForeground(endpoint, key, image_file):
@@ -124,6 +149,30 @@ def BackgroundForeground(endpoint, key, image_file):
     mode = "backgroundRemoval"  # Can be "foregroundMatting" or "backgroundRemoval"
 
     # Remove the background from the image or generate a foreground matte
+    # Remove the background from the image or generate a foreground matte
+    print('\nRemoving background from image...')
+
+    url = "{}computervision/imageanalysis:segment?api-version={}&mode={}".format(
+        endpoint, api_version, mode)
+
+    headers = {
+        "Ocp-Apim-Subscription-Key": key,
+        "Content-Type": "application/json"
+    }
+
+    image_url = "https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/{}?raw=true".format(
+        image_file)
+
+    body = {
+        "url": image_url,
+    }
+
+    response = requests.post(url, headers=headers, json=body)
+
+    image = response.content
+    with open("background.png", "wb") as file:
+        file.write(image)
+    print('  Results saved in background.png \n')
 
 
 if __name__ == "__main__":
