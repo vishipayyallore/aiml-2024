@@ -96,7 +96,7 @@ def GetTextRead(image_file):
         # Save image
         plt.imshow(image)
         plt.tight_layout(pad=0)
-        outputfile = 'text.jpg'
+        outputfile = 'images/text.jpg'
         fig.savefig(outputfile)
         print('\n  Results saved in', outputfile)
 
