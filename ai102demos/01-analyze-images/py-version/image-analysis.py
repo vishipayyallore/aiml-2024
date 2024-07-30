@@ -149,7 +149,6 @@ def BackgroundForeground(endpoint, key, image_file):
     mode = "backgroundRemoval"  # Can be "foregroundMatting" or "backgroundRemoval"
 
     # Remove the background from the image or generate a foreground matte
-    # Remove the background from the image or generate a foreground matte
     print('\nRemoving background from image...')
 
     url = "{}computervision/imageanalysis:segment?api-version={}&mode={}".format(
