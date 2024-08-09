@@ -20,8 +20,6 @@ try
 {
     ForegroundColor = ConsoleColor.DarkCyan;
 
-    OpenAIClient client = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
-
     do
     {
         // Pause for system message update
@@ -75,10 +73,24 @@ async Task GetResponseFromOpenAI(string systemMessage, string userMessage)
     }
 
     // Configure the Azure OpenAI client
-
+    OpenAIClient client = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
 
     // Format and send the request to the model
+    // Format and send the request to the model
+    ChatCompletionsOptions chatCompletionsOptions = new()
+    {
+        Messages =
+         {
+             new ChatRequestSystemMessage(systemMessage),
+             new ChatRequestUserMessage(userMessage)
+         },
+        Temperature = 0.7f,
+        MaxTokens = 800,
+        DeploymentName = appConfig.AzureOpenAiDeploymentName
+    };
 
+    // Get response from Azure OpenAI
+    Response<ChatCompletions> response = await client.GetChatCompletionsAsync(chatCompletionsOptions);
 
     ChatCompletions completions = response.Value;
     string completion = completions.Choices[0].Message.Content;
