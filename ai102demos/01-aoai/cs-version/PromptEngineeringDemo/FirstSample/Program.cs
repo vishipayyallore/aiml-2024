@@ -29,11 +29,11 @@ try
         ReadKey();
 
         WriteLine("\nUsing system message from system.txt");
-        string systemMessage = System.IO.File.ReadAllText("system.txt");
+        string systemMessage = File.ReadAllText("system.txt");
         systemMessage = systemMessage.Trim();
 
         WriteLine("\nEnter user message or type 'quit' to exit:");
-        string userMessage = ReadLine() ?? "";
+        string userMessage = ReadLine() ?? string.Empty;
         userMessage = userMessage.Trim();
 
         if (systemMessage.Equals("quit", StringComparison.CurrentCultureIgnoreCase) || userMessage.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
@@ -42,7 +42,7 @@ try
         }
         else if (string.IsNullOrEmpty(systemMessage) || string.IsNullOrEmpty(userMessage))
         {
-            WriteLine("Please enter a system and user message.");
+            WriteLine("Please enter BOTH a system and user message.");
             continue;
         }
         else
