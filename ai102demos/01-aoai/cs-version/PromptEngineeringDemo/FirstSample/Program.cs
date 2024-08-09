@@ -22,25 +22,27 @@ try
 
     do
     {
-        // Pause for system message update
-        Console.WriteLine("-----------\nPausing the app to allow you to change the system prompt.\nPress any key to continue...");
-        Console.ReadKey();
+        ForegroundColor = ConsoleColor.DarkCyan;
 
-        Console.WriteLine("\nUsing system message from system.txt");
+        // Pause for system message update
+        WriteLine("-----------\nPausing the app to allow you to change the system prompt.\nPress any key to continue...");
+        ReadKey();
+
+        WriteLine("\nUsing system message from system.txt");
         string systemMessage = System.IO.File.ReadAllText("system.txt");
         systemMessage = systemMessage.Trim();
 
-        Console.WriteLine("\nEnter user message or type 'quit' to exit:");
-        string userMessage = Console.ReadLine() ?? "";
+        WriteLine("\nEnter user message or type 'quit' to exit:");
+        string userMessage = ReadLine() ?? "";
         userMessage = userMessage.Trim();
 
-        if (systemMessage.ToLower() == "quit" || userMessage.ToLower() == "quit")
+        if (systemMessage.Equals("quit", StringComparison.CurrentCultureIgnoreCase) || userMessage.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
         {
             break;
         }
         else if (string.IsNullOrEmpty(systemMessage) || string.IsNullOrEmpty(userMessage))
         {
-            Console.WriteLine("Please enter a system and user message.");
+            WriteLine("Please enter a system and user message.");
             continue;
         }
         else
@@ -59,16 +61,18 @@ catch (Exception)
 footer.DisplayFooter('-');
 
 ResetColor();
-WriteLine("\n\nPress any key ...");
+WriteLine("\n\nThank you for using Azure Open AI ... Press any key ...");
 ReadKey();
 
 async Task GetResponseFromOpenAI(string systemMessage, string userMessage)
 {
-    Console.WriteLine("\nSending prompt to Azure OpenAI endpoint...\n\n");
+    ForegroundColor = ConsoleColor.DarkGreen;
+
+    WriteLine("\nSending prompt to Azure OpenAI endpoint...\n\n");
 
     if (string.IsNullOrEmpty(appConfig.AzureOpenAiEndpoint) || string.IsNullOrEmpty(appConfig.AzureOpenAiKey) || string.IsNullOrEmpty(appConfig.AzureOpenAiDeploymentName))
     {
-        Console.WriteLine("Please check your appsettings.json file for missing or incorrect values.");
+        WriteLine("Please check your appsettings.json file for missing or incorrect values.");
         return;
     }
 
@@ -76,7 +80,10 @@ async Task GetResponseFromOpenAI(string systemMessage, string userMessage)
     OpenAIClient client = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
 
     // Format and send the request to the model
-    // Format and send the request to the model
+    WriteLine("\nAdding grounding context from grounding.txt");
+    string groundingText = System.IO.File.ReadAllText("grounding.txt");
+    userMessage = groundingText + userMessage;
+
     ChatCompletionsOptions chatCompletionsOptions = new()
     {
         Messages =
@@ -98,9 +105,9 @@ async Task GetResponseFromOpenAI(string systemMessage, string userMessage)
     // Write response full response to console, if requested
     if (printFullResponse)
     {
-        Console.WriteLine($"\nFull response: {JsonSerializer.Serialize(completions, new JsonSerializerOptions { WriteIndented = true })}\n\n");
+        WriteLine($"\nFull response: {JsonSerializer.Serialize(completions, new JsonSerializerOptions { WriteIndented = true })}\n\n");
     }
 
     // Write response to console
-    Console.WriteLine($"\nResponse:\n{completion}\n\n");
+    WriteLine($"\nResponse:\n{completion}\n\n");
 }
