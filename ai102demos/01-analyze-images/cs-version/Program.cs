@@ -70,24 +70,54 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
 
     // Get result with specified features to be retrieved
     ImageAnalysisResult result = client.Analyze(BinaryData.FromStream(stream),
-        VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Objects | VisualFeatures.Tags | VisualFeatures.People);
+        VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Objects |
+        VisualFeatures.Read | VisualFeatures.Tags | VisualFeatures.People | VisualFeatures.SmartCrops);
 
     // Display analysis results
-
     ForegroundColor = ConsoleColor.Green;
     GetImageCaptions(result.Caption);
 
     ForegroundColor = ConsoleColor.DarkMagenta;
     GetDenseCaptions(result.DenseCaptions);
 
-    ForegroundColor = ConsoleColor.DarkGreen;
-    GetImageTags(result.Tags);
-
     ForegroundColor = ConsoleColor.DarkCyan;
     GetObjects(imageFile, stream, result.Objects);
 
+    ForegroundColor = ConsoleColor.DarkBlue;
+    // Print text (OCR) analysis results to the console
+    WriteLine(" Read:");
+    foreach (DetectedTextBlock block in result.Read.Blocks)
+    {
+        foreach (DetectedTextLine line in block.Lines)
+        {
+            WriteLine($"   Line: '{line.Text}', Bounding Polygon: [{string.Join(" ", line.BoundingPolygon)}]");
+            foreach (DetectedTextWord word in line.Words)
+            {
+                WriteLine($"     Word: '{word.Text}', Confidence {word.Confidence.ToString("#.####")}, Bounding Polygon: [{string.Join(" ", word.BoundingPolygon)}]");
+            }
+        }
+    }
+
+    ForegroundColor = ConsoleColor.DarkGreen;
+    GetImageTags(result.Tags);
+
     ForegroundColor = ConsoleColor.DarkYellow;
     GetPeople(imageFile, result.People);
+
+    ForegroundColor = ConsoleColor.DarkRed;
+    // Print smart-crops analysis results to the console
+    Console.WriteLine(" SmartCrops:");
+    foreach (CropRegion cropRegion in result.SmartCrops.Values)
+    {
+        Console.WriteLine($"   Aspect ratio: {cropRegion.AspectRatio}, Bounding box: {cropRegion.BoundingBox}");
+    }
+
+    ForegroundColor = ConsoleColor.DarkGray;
+    // Print metadata
+    Console.WriteLine(" Metadata:");
+    Console.WriteLine($"   Model: {result.ModelVersion}");
+    Console.WriteLine($"   Image width: {result.Metadata.Width}");
+    Console.WriteLine($"   Image hight: {result.Metadata.Height}");
 
     ResetColor();
 }
