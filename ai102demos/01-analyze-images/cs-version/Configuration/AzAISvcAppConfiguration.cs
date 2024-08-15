@@ -1,4 +1,4 @@
-﻿namespace imageanalysis.Configuration;
+﻿namespace ImageAnalysis.Configuration;
 
 public class AzAISvcAppConfiguration
 {

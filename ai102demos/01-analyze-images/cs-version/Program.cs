@@ -1,8 +1,8 @@
 ﻿using Azure;
 using Azure.AI.Vision.ImageAnalysis;
 using HeaderFooter.Interfaces;
-using imageanalysis.Configuration;
-using imageanalysis.Extensions;
+using ImageAnalysis.Configuration;
+using ImageAnalysis.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
