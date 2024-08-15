@@ -132,7 +132,7 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
 
     if (response.IsSuccessStatusCode)
     {
-        File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
+        File.WriteAllBytes("./images/O_background.png", response.Content.ReadAsByteArrayAsync().Result);
         WriteLine("  Results saved in background.png\n");
     }
     else
@@ -207,7 +207,7 @@ static void GetObjects(string imageFile, FileStream stream, ObjectsResult object
         }
 
         // Save annotated image
-        String output_file = "objects.jpg";
+        String output_file = "./images/O_objects.jpg";
         image.Save(output_file);
         WriteLine("  Results saved in " + output_file + "\n");
     }
@@ -239,7 +239,7 @@ static void GetPeople(string imageFile, PeopleResult peopleResult)
         }
 
         // Save annotated image
-        String output_file = "persons.jpg";
+        String output_file = "./images/O_persons.jpg";
         image.Save(output_file);
         WriteLine("  Results saved in " + output_file + "\n");
     }
