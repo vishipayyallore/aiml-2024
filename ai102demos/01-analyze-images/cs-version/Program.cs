@@ -21,17 +21,10 @@ AzAISvcAppConfiguration appConfig = host.Services.GetRequiredService<AzAISvcAppC
 
 header.DisplayHeader('=', "Azure AI Services - Image Analysis");
 
-// Get image
-//string imageFile = "images/street.jpg";
-//string imageFile = "images/building.jpg";
-//string imageFile = "images/man_door_1.jpg";
-//string imageFile = "images/man_door_2.jpg";
-//string imageFile = "images/man_door_3.jpg";
-string imageFile = "images/man_door_4.jpg";
-if (args.Length > 0)
-{
-    imageFile = args[0];
-}
+string[] imageFiles = ["images/street.jpg", "images/building.jpg", "images/man_door_1.jpg", "images/man_door_2.jpg", "images/man_door_3.jpg", "images/man_door_4.jpg"];
+
+// Using a ternary operator to set the imageFile variable
+string imageFile = args.Length > 0 ? args[0] : imageFiles[0];
 
 // Authenticate Azure AI Vision client
 ImageAnalysisClient client = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
