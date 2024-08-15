@@ -2,7 +2,7 @@
 using HeaderFooter.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace imageanalysis.Extensions;
+namespace ImageAnalysis.Extensions;
 
 public static class ImageAnalysisAppExtensions
 {

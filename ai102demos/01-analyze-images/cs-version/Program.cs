@@ -1,8 +1,8 @@
 ﻿using Azure;
 using Azure.AI.Vision.ImageAnalysis;
 using HeaderFooter.Interfaces;
-using imageanalysis.Configuration;
-using imageanalysis.Extensions;
+using ImageAnalysis.Configuration;
+using ImageAnalysis.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,17 +21,10 @@ AzAISvcAppConfiguration appConfig = host.Services.GetRequiredService<AzAISvcAppC
 
 header.DisplayHeader('=', "Azure AI Services - Image Analysis");
 
-// Get image
-//string imageFile = "images/street.jpg";
-//string imageFile = "images/building.jpg";
-//string imageFile = "images/man_door_1.jpg";
-//string imageFile = "images/man_door_2.jpg";
-//string imageFile = "images/man_door_3.jpg";
-string imageFile = "images/man_door_4.jpg";
-if (args.Length > 0)
-{
-    imageFile = args[0];
-}
+string[] imageFiles = ["images/street.jpg", "images/building.jpg", "images/man_door_1.jpg", "images/man_door_2.jpg", "images/man_door_3.jpg", "images/man_door_4.jpg"];
+
+// Using a ternary operator to set the imageFile variable
+string imageFile = args.Length > 0 ? args[0] : imageFiles[0];
 
 // Authenticate Azure AI Vision client
 ImageAnalysisClient client = new(new Uri(appConfig.AiServicesEndpoint!), new AzureKeyCredential(appConfig.AiServicesKey!));
@@ -77,24 +70,54 @@ static void AnalyzeImage(string imageFile, ImageAnalysisClient client)
 
     // Get result with specified features to be retrieved
     ImageAnalysisResult result = client.Analyze(BinaryData.FromStream(stream),
-        VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Objects | VisualFeatures.Tags | VisualFeatures.People);
+        VisualFeatures.Caption | VisualFeatures.DenseCaptions | VisualFeatures.Objects |
+        VisualFeatures.Read | VisualFeatures.Tags | VisualFeatures.People | VisualFeatures.SmartCrops);
 
     // Display analysis results
-
     ForegroundColor = ConsoleColor.Green;
     GetImageCaptions(result.Caption);
 
     ForegroundColor = ConsoleColor.DarkMagenta;
     GetDenseCaptions(result.DenseCaptions);
 
-    ForegroundColor = ConsoleColor.DarkGreen;
-    GetImageTags(result.Tags);
-
     ForegroundColor = ConsoleColor.DarkCyan;
     GetObjects(imageFile, stream, result.Objects);
 
+    ForegroundColor = ConsoleColor.DarkBlue;
+    // Print text (OCR) analysis results to the console
+    WriteLine(" Read:");
+    foreach (DetectedTextBlock block in result.Read.Blocks)
+    {
+        foreach (DetectedTextLine line in block.Lines)
+        {
+            WriteLine($"   Line: '{line.Text}', Bounding Polygon: [{string.Join(" ", line.BoundingPolygon)}]");
+            foreach (DetectedTextWord word in line.Words)
+            {
+                WriteLine($"     Word: '{word.Text}', Confidence {word.Confidence.ToString("#.####")}, Bounding Polygon: [{string.Join(" ", word.BoundingPolygon)}]");
+            }
+        }
+    }
+
+    ForegroundColor = ConsoleColor.DarkGreen;
+    GetImageTags(result.Tags);
+
     ForegroundColor = ConsoleColor.DarkYellow;
     GetPeople(imageFile, result.People);
+
+    ForegroundColor = ConsoleColor.DarkRed;
+    // Print smart-crops analysis results to the console
+    Console.WriteLine(" SmartCrops:");
+    foreach (CropRegion cropRegion in result.SmartCrops.Values)
+    {
+        Console.WriteLine($"   Aspect ratio: {cropRegion.AspectRatio}, Bounding box: {cropRegion.BoundingBox}");
+    }
+
+    ForegroundColor = ConsoleColor.DarkGray;
+    // Print metadata
+    Console.WriteLine(" Metadata:");
+    Console.WriteLine($"   Model: {result.ModelVersion}");
+    Console.WriteLine($"   Image width: {result.Metadata.Width}");
+    Console.WriteLine($"   Image hight: {result.Metadata.Height}");
 
     ResetColor();
 }
@@ -132,7 +155,7 @@ static async Task BackgroundForeground(string imageFile, string endpoint, string
 
     if (response.IsSuccessStatusCode)
     {
-        File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
+        File.WriteAllBytes("./images/O_background.png", response.Content.ReadAsByteArrayAsync().Result);
         WriteLine("  Results saved in background.png\n");
     }
     else
@@ -207,7 +230,7 @@ static void GetObjects(string imageFile, FileStream stream, ObjectsResult object
         }
 
         // Save annotated image
-        String output_file = "objects.jpg";
+        String output_file = "./images/O_objects.jpg";
         image.Save(output_file);
         WriteLine("  Results saved in " + output_file + "\n");
     }
@@ -239,7 +262,7 @@ static void GetPeople(string imageFile, PeopleResult peopleResult)
         }
 
         // Save annotated image
-        String output_file = "persons.jpg";
+        String output_file = "./images/O_persons.jpg";
         image.Save(output_file);
         WriteLine("  Results saved in " + output_file + "\n");
     }
