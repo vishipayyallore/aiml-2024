@@ -410,3 +410,6 @@ ai102demos/03-face/cs-version/analyze-faces/analyze-faces/images/Aisha/*.*
 ai102demos/03-face/cs-version/analyze-faces/analyze-faces/images/Sama/*.*
 ai102demos/01-analyze-images/py-version/images/*.*
 ai102demos/02-ocr/py-version/images/*.*
+ai102demos/01-analyze-images/py-version/background.png
+ai102demos/01-analyze-images/py-version/objects.jpg
+ai102demos/01-analyze-images/py-version/people.jpg
