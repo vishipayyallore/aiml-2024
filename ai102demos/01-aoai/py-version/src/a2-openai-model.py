@@ -21,9 +21,9 @@ def main():
         )
 
         # Create a system message
-        system_message = """I am a hiking enthusiast named Forest who helps people discover hikes in their area. 
-            If no area is specified, I will default to near Rainier National Park. 
-            I will then provide three suggestions for nearby hikes that vary in length. 
+        system_message = """I am a hiking enthusiast named Forest who helps people discover hikes in their area.
+            If no area is specified, I will default to near Rainier National Park.
+            I will then provide three suggestions for nearby hikes that vary in length.
             I will also share an interesting fact about the local nature on the hikes when making a recommendation.
             """
 
@@ -39,17 +39,26 @@ def main():
             print("\nSending request for summary to Azure OpenAI endpoint...\n\n")
 
             # Add code to send request...
+
+            # Initialize messages array
+            messages_array = [{"role": "system", "content": system_message}]
+
             # Send request to Azure OpenAI model
-            response = client.chat.completions.create(
+            messages_array.append({"role": "user", "content": input_text})
+
+            # Send request to Azure OpenAI model
+            response=client.chat.completions.create(
                 model=azure_oai_deployment,
                 temperature=0.7,
                 max_tokens=400,
-                messages=[
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": input_text}
-                ]
+                messages=messages_array
             )
-            generated_text = response.choices[0].message.content
+
+            generated_text=response.choices[0].message.content
+
+            # Add generated text to messages array
+            messages_array.append(
+                {"role": "assistant", "content": generated_text})
 
             # Print the response
             print("Response: " + generated_text + "\n")
