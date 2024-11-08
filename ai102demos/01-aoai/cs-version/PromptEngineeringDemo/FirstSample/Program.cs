@@ -24,6 +24,12 @@ OpenAIClient openAIClient = new(new Uri(appConfig.AzureOpenAiEndpoint!), new Azu
 // System message to provide context to the model
 string systemMessage = "I am a hiking enthusiast named Forest who helps people discover hikes in their area. If no area is specified, I will default to near Rainier National Park. I will then provide three suggestions for nearby hikes that vary in length. I will also share an interesting fact about the local nature on the hikes when making a recommendation.";
 
+// Initialize messages list
+var messagesList = new List<ChatRequestMessage>()
+     {
+         new ChatRequestSystemMessage(systemMessage),
+     };
+
 do
 {
     Console.WriteLine("Enter your prompt text (or type 'quit' to exit): ");
@@ -40,19 +46,23 @@ do
     Console.WriteLine("\nSending request for summary to Azure OpenAI endpoint...\n\n");
 
     // Add code to send request...
-    // Add code to send request...
+
+    // Build completion options object
+    messagesList.Add(new ChatRequestUserMessage(inputText));
+
     // Build completion options object
     ChatCompletionsOptions chatCompletionsOptions = new()
     {
-        Messages =
-     {
-         new ChatRequestSystemMessage(systemMessage),
-         new ChatRequestUserMessage(inputText),
-     },
         MaxTokens = 400,
         Temperature = 0.7f,
         DeploymentName = appConfig.AzureOpenAiDeploymentName,
     };
+
+    // Add messages to the completion options
+    foreach (ChatRequestMessage chatMessage in messagesList)
+    {
+        chatCompletionsOptions.Messages.Add(chatMessage);
+    }
 
     // Send request to Azure OpenAI model
     ChatCompletions response = openAIClient.GetChatCompletions(chatCompletionsOptions);
