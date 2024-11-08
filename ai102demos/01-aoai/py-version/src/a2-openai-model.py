@@ -27,6 +27,9 @@ def main():
             I will also share an interesting fact about the local nature on the hikes when making a recommendation.
             """
 
+        # Initialize messages array
+        messages_array = [{"role": "system", "content": system_message}]
+
         while True:
             # Get input text
             input_text = input("Enter the prompt (or type 'quit' to exit): ")
@@ -40,21 +43,18 @@ def main():
 
             # Add code to send request...
 
-            # Initialize messages array
-            messages_array = [{"role": "system", "content": system_message}]
-
             # Send request to Azure OpenAI model
             messages_array.append({"role": "user", "content": input_text})
 
             # Send request to Azure OpenAI model
-            response=client.chat.completions.create(
+            response = client.chat.completions.create(
                 model=azure_oai_deployment,
                 temperature=0.7,
                 max_tokens=400,
                 messages=messages_array
             )
 
-            generated_text=response.choices[0].message.content
+            generated_text = response.choices[0].message.content
 
             # Add generated text to messages array
             messages_array.append(
