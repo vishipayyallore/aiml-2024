@@ -4,13 +4,16 @@ Some description
 
 ## Few Commands
 
-### Analyze Images
+### `test-openai-model.py`
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\activate
 
 python.exe -m pip install --upgrade pip
+
+pip install openai==1.13.3
+pip install python-dotenv
 
 pip freeze > ./requirements.txt
 pip install -r .\requirements.txt
