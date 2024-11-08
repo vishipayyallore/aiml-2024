@@ -25,8 +25,8 @@ def main():
         response = client.chat.completions.create(
             model=azure_oai_deployment,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "What is Azure OpenAI?"}
+                {"role": "system", "content": "You are an Expert Cardiologist."},
+                {"role": "user", "content": "What is TV?"}
             ]
         )
         generated_text = response.choices[0].message.content
