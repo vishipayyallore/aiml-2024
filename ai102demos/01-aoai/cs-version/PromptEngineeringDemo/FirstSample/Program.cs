@@ -19,6 +19,8 @@ AzAISvcAppConfiguration appConfig = host.Services.GetRequiredService<AzAISvcAppC
 bool printFullResponse = false;
 
 
+header.DisplayHeader('=', "Azure OpenAI DALLE-3");
+
 // Get prompt for image to be generated
 Console.Clear();
 Console.WriteLine("Enter a prompt to request an image:");
@@ -53,8 +55,6 @@ using (var client = new HttpClient())
     Console.WriteLine(revisedPrompt.ToJsonString());
     Console.WriteLine(url.ToJsonString().Replace(@"\u0026", "&"));
 }
-
-header.DisplayHeader('=', "Azure OpenAI DALLE-3");
 
 await ShowDalleDemo(appConfig);
 
