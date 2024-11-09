@@ -18,6 +18,63 @@ IFooter footer = host.Services.GetRequiredService<IFooter>();
 AzAISvcAppConfiguration appConfig = host.Services.GetRequiredService<AzAISvcAppConfiguration>();
 bool printFullResponse = false;
 
+// Initialize the Azure OpenAI client
+OpenAIClient openAIClient = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
+
+// System message to provide context to the model
+string systemMessage = "I am a hiking enthusiast named Forest who helps people discover hikes in their area. If no area is specified, I will default to near Rainier National Park. I will then provide three suggestions for nearby hikes that vary in length. I will also share an interesting fact about the local nature on the hikes when making a recommendation.";
+
+// Initialize messages list
+var messagesList = new List<ChatRequestMessage>()
+     {
+         new ChatRequestSystemMessage(systemMessage),
+     };
+
+do
+{
+    Console.WriteLine("Enter your prompt text (or type 'quit' to exit): ");
+    string? inputText = Console.ReadLine();
+    if (inputText == "quit") break;
+
+    // Generate summary from Azure OpenAI
+    if (inputText == null)
+    {
+        Console.WriteLine("Please enter a prompt.");
+        continue;
+    }
+
+    Console.WriteLine("\nSending request for summary to Azure OpenAI endpoint...\n\n");
+
+    // Add code to send request...
+
+    // Build completion options object
+    messagesList.Add(new ChatRequestUserMessage(inputText));
+
+    // Build completion options object
+    ChatCompletionsOptions chatCompletionsOptions = new()
+    {
+        MaxTokens = 400,
+        Temperature = 0.7f,
+        DeploymentName = appConfig.AzureOpenAiDeploymentName,
+    };
+
+    // Add messages to the completion options
+    foreach (ChatRequestMessage chatMessage in messagesList)
+    {
+        chatCompletionsOptions.Messages.Add(chatMessage);
+    }
+
+    // Send request to Azure OpenAI model
+    ChatCompletions response = openAIClient.GetChatCompletions(chatCompletionsOptions);
+
+    // Print the response
+    string completion = response.Choices[0].Message.Content;
+    Console.WriteLine("Response: " + completion + "\n");
+
+} while (true);
+
+
+header.DisplayHeader('=', "Azure OpenAI DALLE-3");
 
 // Get prompt for image to be generated
 Console.Clear();
@@ -53,8 +110,6 @@ using (var client = new HttpClient())
     Console.WriteLine(revisedPrompt.ToJsonString());
     Console.WriteLine(url.ToJsonString().Replace(@"\u0026", "&"));
 }
-
-header.DisplayHeader('=', "Azure OpenAI DALLE-3");
 
 await ShowDalleDemo(appConfig);
 
