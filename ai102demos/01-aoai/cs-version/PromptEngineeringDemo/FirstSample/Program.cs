@@ -46,7 +46,6 @@ do
     Console.WriteLine("\nSending request for summary to Azure OpenAI endpoint...\n\n");
 
     // Add code to send request...
-
     // Build completion options object
     messagesList.Add(new ChatRequestUserMessage(inputText));
 
@@ -70,6 +69,9 @@ do
     // Print the response
     string completion = response.Choices[0].Message.Content;
     Console.WriteLine("Response: " + completion + "\n");
+
+    // Add generated text to messages list
+    messagesList.Add(new ChatRequestAssistantMessage(completion));
 
 } while (true);
 
