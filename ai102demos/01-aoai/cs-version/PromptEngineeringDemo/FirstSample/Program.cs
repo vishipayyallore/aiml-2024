@@ -21,6 +21,8 @@ bool printFullResponse = false;
 // Initialize the Azure OpenAI client
 OpenAIClient openAIClient = new(new Uri(appConfig.AzureOpenAiEndpoint!), new AzureKeyCredential(appConfig.AzureOpenAiKey!));
 
+header.DisplayHeader('=', "Azure OpenAI - Chat Conversations with History");
+
 // System message to provide context to the model
 string systemMessage = "I am a hiking enthusiast named Forest who helps people discover hikes in their area. If no area is specified, I will default to near Rainier National Park. I will then provide three suggestions for nearby hikes that vary in length. I will also share an interesting fact about the local nature on the hikes when making a recommendation.";
 
@@ -76,10 +78,10 @@ do
 } while (true);
 
 
-header.DisplayHeader('=', "Azure OpenAI DALLE-3");
-
 // Get prompt for image to be generated
 Console.Clear();
+
+header.DisplayHeader('=', "Azure OpenAI DALLE-3");
 Console.WriteLine("Enter a prompt to request an image:");
 string prompt = Console.ReadLine() ?? "";
 
